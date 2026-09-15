@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: css-ui
+  namespace: css-ui
+  labels:
+    app: css-ui
+spec:
+  type: ClusterIP
+  selector:
+    app: css-ui
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 80
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800

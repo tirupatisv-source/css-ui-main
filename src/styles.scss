@@ -1,0 +1,3107 @@
+/* Global styles for CSS Logistics Application */
+@use '@angular/material' as mat;
+@use './app/shared/utilities/theme-variables' as theme;
+
+/* Suppress all browser/Material focus rings on keyboard-nav elements — styles applied via class instead */
+.keyboard-nav-focus,
+.keyboard-nav-focus:focus,
+.keyboard-nav-focus:focus-visible {
+  outline: none !important;
+}
+.keyboard-nav-focus .mat-mdc-focus-indicator::before,
+.keyboard-nav-focus::before {
+  opacity: 0 !important;
+  border: none !important;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* Scrollable content area when nav header is present */
+main.with-header {
+  overflow-y: auto;
+}
+
+/* Authentication page background - works correctly in global styles */
+.login-viewport,
+.logout-viewport {
+  background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), 
+              url('/assets/background.png') no-repeat center center !important;
+  background-size: cover !important;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.mat-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Data grid/table styles matching VB6 DataGrid appearance */
+.data-table {
+  width: 100%;
+
+  .mat-mdc-header-cell {
+    font-weight: 600;
+    background-color: theme.$color-light-gray;
+  }
+}
+
+/* Form layout styles */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 0.97fr;
+  gap: 16px;
+  padding: 16px;
+}
+
+.form-full-row {
+  grid-column: 1 / -1;
+}
+
+/* Read-only mode styling */
+.read-only {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* Dialog styles */
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 16px;
+}
+
+/* ============================================================
+   GLOBAL DIALOG BACKDROP - Remove shadow overlay on all dialogs
+   ============================================================ */
+/* Make all dialog backdrops transparent to prevent dark shadows */
+.cdk-overlay-backdrop {
+  background-color: transparent !important;
+  background: transparent !important;
+  opacity: 1 !important;
+  pointer-events: none !important;
+}
+
+/* Ensure dark theme dialogs also have transparent backdrop */
+[data-theme="dark"] .cdk-overlay-backdrop {
+  background-color: transparent !important;
+  background: transparent !important;
+  opacity: 1 !important;
+  pointer-events: none !important;
+}
+
+/* Remove Material's default semi-transparent black backdrop */
+.cdk-overlay-backdrop.cdk-overlay-backdrop-show {
+  background-color: transparent !important;
+  background: transparent !important;
+  opacity: 1 !important;
+  pointer-events: none !important;
+}
+
+/* Hide backdrop by making it fully transparent and non-interactive */
+.cdk-overlay-container {
+  background-color: transparent !important;
+}
+
+.cdk-overlay-pane .cdk-overlay-backdrop {
+  background: transparent !important;
+  background-color: transparent !important;
+  opacity: 1 !important;
+  pointer-events: none !important;
+}
+
+/* Remove all shadows from dialog containers and surfaces */
+.cdk-overlay-pane {
+  box-shadow: none !important;
+}
+
+.mat-mdc-dialog-container {
+  box-shadow: none !important;
+}
+
+.admin-modal-compact .mat-mdc-dialog-container,
+.admin-modal-compact .mat-mdc-dialog-surface {
+  max-width: 90vw;
+  overflow-x: hidden;
+}
+
+.admin-modal-wide .mat-mdc-dialog-container,
+.admin-modal-wide .mat-mdc-dialog-surface {
+  max-width: 90vw;
+}
+
+.cdk-overlay-pane.admin-modal-fullscreen {
+  width: 100vw !important;
+  height: calc(100vh - 58px) !important;
+  max-width: 100vw !important;
+  max-height: calc(100vh - 58px) !important;
+  margin-top: 58px !important;
+}
+
+.admin-modal-fullscreen .mat-mdc-dialog-container,
+.admin-modal-fullscreen .mat-mdc-dialog-surface {
+  width: 100vw;
+  height: calc(100vh - 58px);
+  max-width: 100vw !important;
+  max-height: calc(100vh - 58px) !important;
+  border-radius: 0 !important;
+}
+
+/* ============================================================
+   BLUR BACKDROP - Apply blur effect to background
+   ============================================================ */
+.blur-backdrop {
+  background-color: rgba(0, 0, 0, 0.4) !important;
+  background: rgba(0, 0, 0, 0.4) !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+/* Ensure blur backdrop shows on top of content */
+.cdk-overlay-backdrop.blur-backdrop {
+  background-color: rgba(0, 0, 0, 0.4) !important;
+  background: rgba(0, 0, 0, 0.4) !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+/* Apply blur to all content behind the dialog when blur-backdrop is active */
+.cdk-overlay-backdrop.blur-backdrop.cdk-overlay-backdrop-show {
+  background-color: rgba(0, 0, 0, 0.4) !important;
+  background: rgba(0, 0, 0, 0.4) !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+.mat-mdc-dialog-surface,
+.mdc-dialog__surface {
+  box-shadow: none !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+/* Remove Material elevation classes that add shadows */
+.mdc-elevation--z1,
+.mdc-elevation--z2,
+.mdc-elevation--z4,
+.mdc-elevation--z8,
+.mdc-elevation--z16,
+.mdc-elevation--z24 {
+  box-shadow: none !important;
+}
+
+/* Global Dialog Styling - Using panelClass: 'themed-dialog' */
+
+/* Theme all dialogs with themed-dialog class */
+.themed-dialog {
+  /* Dialog titles - BROWN (#8a4d00) */
+  h2[mat-dialog-title],
+  h1[mat-dialog-title],
+  h3[mat-dialog-title],
+  h4[mat-dialog-title],
+  .mat-mdc-dialog-title,
+  h2 {
+    @include theme.dialog-title-styles;
+  }
+
+  /* ===== GLOBAL RULE - Style notched outline as proper borders (from project-selector) ===== */
+  .mdc-notched-outline__leading,
+  .mat-mdc-notch-piece.mdc-notched-outline__leading {
+    background-clip: padding-box !important;
+    box-shadow: none !important;
+    min-width: 12px !important;
+    width: 12px !important;
+    border-radius: 4px 0 0 4px !important;
+    height: 100%;
+  }
+
+  .mdc-notched-outline__notch,
+  .mat-mdc-notch-piece.mdc-notched-outline__notch {
+    border-left: none !important;
+    border-right: none !important;
+  }
+
+  .mat-mdc-notch-piece.mdc-notched-outline__trailing {
+    border-radius: 0 4px 4px 0 !important;
+  }
+
+  /* All h2 elements in dialogs */
+  h2 {
+    @include theme.dialog-title-styles;
+    margin: 0 !important;
+  }
+
+  /* Search field - ORANGE border (#ff9800) */
+  .search-field {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: #ff9800 !important;
+      border-top-color: #ff9800 !important;
+      border-right-color: #ff9800 !important;
+      border-bottom-color: #ff9800 !important;
+      border-left-color: #ff9800 !important;
+    }
+
+    .mdc-notched-outline {
+      --mdc-notched-outline-color: #ff9800 !important;
+    }
+
+    /* Placeholder text - ORANGE with 40% opacity */
+    input::placeholder {
+      color: rgba(255, 152, 0, 0.4) !important;
+    }
+
+    /* Focused state - darker orange */
+    &.mat-focused {
+      .mdc-notched-outline__leading,
+      .mdc-notched-outline__notch,
+      .mdc-notched-outline__trailing {
+        border-color: #fb8500 !important;
+        border-top-color: #fb8500 !important;
+        border-right-color: #fb8500 !important;
+        border-bottom-color: #fb8500 !important;
+        border-left-color: #fb8500 !important;
+        border-width: 2px !important;
+      }
+    }
+  }
+
+  /* All form field labels - ORANGE text */
+  mat-label,
+  .mat-mdc-form-field-label {
+    color: #ff9800 !important;
+  }
+
+  /* Required field asterisk - ORANGE */
+  .mat-mdc-form-field-required-marker {
+    color: #ff9800 !important;
+  }
+
+  /* Placeholder text - ORANGE with 40% opacity */
+  input::placeholder,
+  textarea::placeholder {
+    color: theme.$color-primary-light !important;
+  }
+
+  /* All form field outlines in dialogs - ORANGE borders */
+  mat-form-field {
+    .mdc-notched-outline__leading,
+    .mat-mdc-notch-piece.mdc-notched-outline__leading {
+      border-top: 1px solid #ff9800 !important;
+      border-bottom: 1px solid #ff9800 !important;
+      border-left: 1px solid #ff9800 !important;
+    }
+
+    .mdc-notched-outline__notch,
+    .mat-mdc-notch-piece.mdc-notched-outline__notch {
+      border-bottom: 1px solid #ff9800 !important;
+    }
+
+    .mat-mdc-notch-piece.mdc-notched-outline__trailing {
+      border-top: 1px solid #ff9800 !important;
+      border-bottom: 1px solid #ff9800 !important;
+      border-right: 1px solid #ff9800 !important;
+    }
+
+    .mdc-notched-outline {
+      --mdc-notched-outline-color: #ff9800 !important;
+    }
+
+    /* Focused state - darker orange */
+    &.mat-focused {
+      .mdc-notched-outline__leading,
+      .mat-mdc-notch-piece.mdc-notched-outline__leading {
+        border-top: 2px solid #fb8500 !important;
+        border-bottom: 2px solid #fb8500 !important;
+        border-left: 2px solid #fb8500 !important;
+      }
+
+      .mdc-notched-outline__notch,
+      .mat-mdc-notch-piece.mdc-notched-outline__notch {
+        border-bottom: 2px solid #fb8500 !important;
+      }
+
+      .mat-mdc-notch-piece.mdc-notched-outline__trailing {
+        border-top: 2px solid #fb8500 !important;
+        border-bottom: 2px solid #fb8500 !important;
+        border-right: 2px solid #fb8500 !important;
+      }
+    }
+  }
+
+  /* Dialog content styling */
+  /* mat-dialog-content padding is now component-specific, not globally applied */
+
+  /* Dialog title - remove default margin */
+  h2[mat-dialog-title],
+  h1[mat-dialog-title],
+  h3[mat-dialog-title],
+  h4[mat-dialog-title] {
+    margin: 0 !important;
+  }
+
+  /* Dialog actions - Orange primary & Blue warn buttons */
+  mat-dialog-actions {
+    display: flex !important;
+    justify-content: flex-end !important;
+    gap: 8px !important;
+    padding: 16px !important;
+    border-top: 1px solid #eee !important;
+  }
+
+  /* Primary buttons - Orange */
+  button[mat-raised-button][color="primary"],
+  button[mat-flat-button][color="primary"],
+  button[mat-button][color="primary"] {
+    background-color: #ff9800 !important;
+    color: white !important;
+
+    &:hover:not(:disabled) {
+      background-color: #fb8500 !important;
+    }
+
+    &:active:not(:disabled) {
+      background-color: #e68900 !important;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  /* Warn button - Red */
+  button[mat-raised-button][color="warn"],
+  button[mat-flat-button][color="warn"],
+  button[mat-button][color="warn"] {
+    background-color: theme.$color-error !important;
+    color: white !important;
+
+    &:hover:not(:disabled) {
+      background-color: #c41c3b !important;
+    }
+
+    &:active:not(:disabled) {
+      background-color: #8b0000 !important;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  /* Plain buttons - Red text */
+  button[mat-button]:not([color]) {
+    color: theme.$color-error !important;
+
+    &:hover:not(:disabled) {
+      background-color: rgba(176, 0, 32, 0.08) !important;
+    }
+  }
+}
+
+/* ============================================================
+   GLOBAL FORM FIELD STYLES - ALL DIALOGS
+   Applies to New, Open, Copy, Delete dialogs
+   ============================================================ */
+mat-dialog-content {
+  mat-form-field {
+    .mdc-notched-outline__leading,
+    .mat-mdc-notch-piece.mdc-notched-outline__leading {
+      border-top: 2px solid #ff9800 !important;
+      border-bottom: 2px solid #ff9800 !important;
+      border-left: 2px solid #ff9800 !important;
+    }
+
+    .mdc-notched-outline__notch,
+    .mat-mdc-notch-piece.mdc-notched-outline__notch {
+      border-bottom: 2px solid #ff9800 !important;
+    }
+
+    .mat-mdc-notch-piece.mdc-notched-outline__trailing {
+      border-top: 2px solid #ff9800 !important;
+      border-bottom: 2px solid #ff9800 !important;
+      border-right: 2px solid #ff9800 !important;
+    }
+
+    /* Focus state - darker orange with glow */
+    &.mat-focused {
+      .mdc-notched-outline__leading,
+      .mat-mdc-notch-piece.mdc-notched-outline__leading {
+        border-top: 2px solid #e68900 !important;
+        border-bottom: 2px solid #e68900 !important;
+        border-left: 2px solid #e68900 !important;
+      }
+
+      .mdc-notched-outline__notch,
+      .mat-mdc-notch-piece.mdc-notched-outline__notch {
+        border-bottom: 2px solid #e68900 !important;
+      }
+
+      .mat-mdc-notch-piece.mdc-notched-outline__trailing {
+        border-top: 2px solid #e68900 !important;
+        border-bottom: 2px solid #e68900 !important;
+        border-right: 2px solid #e68900 !important;
+      }
+    }
+
+    /* Label - Orange text */
+    label.mat-mdc-form-field-label,
+    label.mdc-floating-label,
+    mat-label {
+      color: #ff9800 !important;
+    }
+
+    /* Required asterisk - Orange */
+    .mat-mdc-form-field-required-marker,
+    .mdc-floating-label--required {
+      color: #ff9800 !important;
+    }
+
+    /* Input text - dark color */
+    input.mat-mdc-input-element,
+    textarea.mat-mdc-textarea,
+    select.mat-mdc-select {
+      color: #222 !important;
+    }
+
+    /* Placeholder text - lighter orange */
+    input::placeholder,
+    textarea::placeholder,
+    select option {
+      color: rgba(255, 152, 0, 0.6) !important;
+    }
+
+    /* Disabled state */
+    &.mat-form-field-disabled {
+      .mdc-notched-outline__leading,
+      .mat-mdc-notch-piece.mdc-notched-outline__leading {
+        border-top: 1px solid #bdbdbd !important;
+        border-bottom: 1px solid #bdbdbd !important;
+        border-left: 1px solid #bdbdbd !important;
+      }
+
+      .mdc-notched-outline__notch,
+      .mat-mdc-notch-piece.mdc-notched-outline__notch {
+        border-bottom: 1px solid #bdbdbd !important;
+      }
+
+      .mat-mdc-notch-piece.mdc-notched-outline__trailing {
+        border-top: 1px solid #bdbdbd !important;
+        border-bottom: 1px solid #bdbdbd !important;
+        border-right: 1px solid #bdbdbd !important;
+      }
+
+      input.mat-mdc-input-element,
+      textarea.mat-mdc-textarea {
+        background-color: #f5f5f5 !important;
+        color: #9e9e9e !important;
+      }
+    }
+
+    /* Error state - Red borders */
+    &.mat-form-field-invalid:not(.mat-focused) {
+      .mdc-notched-outline__leading,
+      .mat-mdc-notch-piece.mdc-notched-outline__leading {
+        border-top: 1px solid #f44336 !important;
+        border-bottom: 1px solid #f44336 !important;
+        border-left: 1px solid #f44336 !important;
+      }
+
+      .mdc-notched-outline__notch,
+      .mat-mdc-notch-piece.mdc-notched-outline__notch {
+        border-bottom: 1px solid #f44336 !important;
+      }
+
+      .mat-mdc-notch-piece.mdc-notched-outline__trailing {
+        border-top: 1px solid #f44336 !important;
+        border-bottom: 1px solid #f44336 !important;
+        border-right: 1px solid #f44336 !important;
+      }
+    }
+  }
+}
+
+/* ============================================================
+   COMMON UTILITY CLASSES - Reusable across all components
+   ============================================================ */
+
+/* ===== LAYOUT UTILITIES ===== */
+
+/* Flexbox helpers */
+.flex-center {
+  @include theme.flex-center;
+}
+
+.flex-between {
+  @include theme.flex-between;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-1 {
+  flex: 1 1 auto;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+
+.flex-shrink {
+  flex-shrink: 1;
+}
+
+.gap-xs {
+  gap: theme.$spacing-xs;
+}
+
+.gap-sm {
+  gap: theme.$spacing-sm;
+}
+
+.gap-md {
+  gap: theme.$spacing-md;
+}
+
+.gap-lg {
+  gap: theme.$spacing-lg;
+}
+
+.gap-xl {
+  gap: theme.$spacing-xl;
+}
+
+/* Grid helpers */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: theme.$spacing-md;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: theme.$spacing-md;
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: theme.$spacing-md;
+}
+
+.grid-full {
+  grid-column: 1 / -1;
+}
+
+/* ===== SPACING UTILITIES ===== */
+
+.p-xs { padding: theme.$spacing-xs; }
+.p-sm { padding: theme.$spacing-sm; }
+.p-md { padding: theme.$spacing-md; }
+.p-lg { padding: theme.$spacing-lg; }
+.p-xl { padding: theme.$spacing-xl; }
+
+.px-xs { padding-left: theme.$spacing-xs; padding-right: theme.$spacing-xs; }
+.px-sm { padding-left: theme.$spacing-sm; padding-right: theme.$spacing-sm; }
+.px-md { padding-left: theme.$spacing-md; padding-right: theme.$spacing-md; }
+.px-lg { padding-left: theme.$spacing-lg; padding-right: theme.$spacing-lg; }
+.px-xl { padding-left: theme.$spacing-xl; padding-right: theme.$spacing-xl; }
+
+.py-xs { padding-top: theme.$spacing-xs; padding-bottom: theme.$spacing-xs; }
+.py-sm { padding-top: theme.$spacing-sm; padding-bottom: theme.$spacing-sm; }
+.py-md { padding-top: theme.$spacing-md; padding-bottom: theme.$spacing-md; }
+.py-lg { padding-top: theme.$spacing-lg; padding-bottom: theme.$spacing-lg; }
+.py-xl { padding-top: theme.$spacing-xl; padding-bottom: theme.$spacing-xl; }
+
+.m-xs { margin: theme.$spacing-xs; }
+.m-sm { margin: theme.$spacing-sm; }
+.m-md { margin: theme.$spacing-md; }
+.m-lg { margin: theme.$spacing-lg; }
+.m-xl { margin: theme.$spacing-xl; }
+
+.mx-xs { margin-left: theme.$spacing-xs; margin-right: theme.$spacing-xs; }
+.mx-sm { margin-left: theme.$spacing-sm; margin-right: theme.$spacing-sm; }
+.mx-md { margin-left: theme.$spacing-md; margin-right: theme.$spacing-md; }
+.mx-lg { margin-left: theme.$spacing-lg; margin-right: theme.$spacing-lg; }
+.mx-xl { margin-left: theme.$spacing-xl; margin-right: theme.$spacing-xl; }
+
+.my-xs { margin-top: theme.$spacing-xs; margin-bottom: theme.$spacing-xs; }
+.my-sm { margin-top: theme.$spacing-sm; margin-bottom: theme.$spacing-sm; }
+.my-md { margin-top: theme.$spacing-md; margin-bottom: theme.$spacing-md; }
+.my-lg { margin-top: theme.$spacing-lg; margin-bottom: theme.$spacing-lg; }
+.my-xl { margin-top: theme.$spacing-xl; margin-bottom: theme.$spacing-xl; }
+
+/* ===== TEXT UTILITIES ===== */
+
+.text-truncate {
+  @include theme.text-truncate;
+}
+
+.text-truncate-2 {
+  @include theme.text-truncate-lines(2);
+}
+
+.text-truncate-3 {
+  @include theme.text-truncate-lines(3);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-bold {
+  font-weight: 600;
+}
+
+.text-primary {
+  color: theme.$color-primary;
+}
+
+.text-secondary {
+  color: theme.$color-secondary;
+}
+
+.text-success {
+  color: theme.$color-success;
+}
+
+.text-error {
+  color: theme.$color-error;
+}
+
+.text-warning {
+  color: theme.$color-warning;
+}
+
+.text-info {
+  color: theme.$color-info;
+}
+
+.text-muted {
+  color: theme.$color-dark-gray;
+}
+
+.text-xs {
+  font-size: theme.$font-size-small;
+}
+
+.text-sm {
+  font-size: theme.$font-size-small;
+}
+
+.text-base {
+  font-size: theme.$font-size-base;
+}
+
+.text-lg {
+  font-size: theme.$font-size-large;
+}
+
+.text-xl {
+  font-size: theme.$font-size-title;
+}
+
+/* ===== BORDER UTILITIES ===== */
+
+.border {
+  border: 1px solid theme.$color-border-gray;
+}
+
+.border-top {
+  border-top: 1px solid theme.$color-border-gray;
+}
+
+.border-bottom {
+  border-bottom: 1px solid theme.$color-border-gray;
+}
+
+.border-left {
+  border-left: 1px solid theme.$color-border-gray;
+}
+
+.border-right {
+  border-right: 1px solid theme.$color-border-gray;
+}
+
+.border-primary {
+  border: 2px solid theme.$color-primary;
+}
+
+.border-secondary {
+  border: 2px solid theme.$color-secondary;
+}
+
+.rounded {
+  border-radius: theme.$border-radius-md;
+}
+
+.rounded-sm {
+  border-radius: theme.$border-radius-sm;
+}
+
+.rounded-lg {
+  border-radius: theme.$border-radius-lg;
+}
+
+/* ===== BACKGROUND UTILITIES ===== */
+
+.bg-white {
+  background-color: theme.$color-white;
+}
+
+.bg-light {
+  background-color: theme.$color-light-gray;
+}
+
+.bg-primary {
+  background-color: theme.$color-primary;
+  color: white;
+}
+
+.bg-secondary {
+  background-color: theme.$color-secondary;
+  color: white;
+}
+
+.bg-success {
+  background-color: theme.$color-success;
+  color: white;
+}
+
+.bg-error {
+  background-color: theme.$color-error;
+  color: white;
+}
+
+.bg-warning {
+  background-color: theme.$color-warning;
+  color: white;
+}
+
+.bg-info {
+  background-color: theme.$color-info;
+  color: white;
+}
+
+/* ===== SHADOW UTILITIES ===== */
+
+.shadow-light {
+  box-shadow: theme.$shadow-light;
+}
+
+.shadow-medium {
+  box-shadow: theme.$shadow-medium;
+}
+
+.shadow-heavy {
+  box-shadow: theme.$shadow-heavy;
+}
+
+/* ===== COMPONENT UTILITIES ===== */
+
+/* Card style - reusable container */
+.card {
+  background: theme.$color-white;
+  border: 1px solid theme.$color-border-gray;
+  border-radius: theme.$border-radius-lg;
+  padding: theme.$spacing-md;
+  box-shadow: theme.$shadow-light;
+
+  &:hover {
+    box-shadow: theme.$shadow-medium;
+  }
+}
+
+/* Header container */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: theme.$spacing-md theme.$spacing-lg;
+  background: theme.$color-white;
+  border-bottom: 1px solid theme.$color-border-gray;
+  position: sticky;
+  top: 0;
+  z-index: 99;
+}
+
+/* Form group - container for label + input */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: theme.$spacing-sm;
+  margin-bottom: theme.$spacing-md;
+}
+
+.form-group-inline {
+  display: flex;
+  align-items: center;
+  gap: theme.$spacing-md;
+  margin-bottom: theme.$spacing-md;
+}
+
+/* Button group */
+.button-group {
+  display: flex;
+  gap: theme.$spacing-sm;
+  flex-wrap: wrap;
+}
+
+/* Alert/Banner styles */
+.alert {
+  padding: theme.$spacing-md;
+  border-radius: theme.$border-radius-md;
+  border-left: 4px solid theme.$color-error;
+  background-color: rgba(176, 0, 32, 0.1);
+  color: theme.$color-error;
+
+  &.alert-success {
+    border-left-color: theme.$color-success;
+    background-color: rgba(76, 175, 80, 0.1);
+    color: theme.$color-success;
+  }
+
+  &.alert-warning {
+    border-left-color: theme.$color-warning;
+    background-color: rgba(255, 152, 0, 0.1);
+    color: #ff6f00;
+  }
+
+  &.alert-error {
+    border-left-color: theme.$color-error;
+    background-color: rgba(176, 0, 32, 0.1);
+    color: theme.$color-error;
+  }
+}
+
+/* Badge/Pill style */
+.badge {
+  display: inline-block;
+  padding: theme.$spacing-xs theme.$spacing-sm;
+  border-radius: 12px;
+  font-size: theme.$font-size-small;
+  font-weight: 600;
+  background-color: theme.$color-light-gray;
+  color: theme.$color-dark-gray;
+
+  &.badge-primary {
+    background-color: theme.$color-primary;
+    color: white;
+  }
+
+  &.badge-secondary {
+    background-color: theme.$color-secondary;
+    color: white;
+  }
+
+  &.badge-success {
+    background-color: theme.$color-success;
+    color: white;
+  }
+
+  &.badge-error {
+    background-color: theme.$color-error;
+    color: white;
+  }
+}
+
+/* ===== VISIBILITY UTILITIES ===== */
+
+.visible {
+  visibility: visible;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.display-none {
+  display: none;
+}
+
+.display-block {
+  display: block;
+}
+
+.display-inline {
+  display: inline;
+}
+
+.display-inline-block {
+  display: inline-block;
+}
+
+.display-flex {
+  display: flex;
+}
+
+.display-grid {
+  display: grid;
+}
+
+/* ===== POSITION UTILITIES ===== */
+
+.position-relative {
+  position: relative;
+}
+
+.position-absolute {
+  position: absolute;
+}
+
+.position-fixed {
+  position: fixed;
+}
+
+.position-sticky {
+  position: sticky;
+}
+
+/* ===== SIZE UTILITIES ===== */
+
+.w-full {
+  width: 100%;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.w-1\/2 {
+  width: 50%;
+}
+
+.w-1\/3 {
+  width: 33.333%;
+}
+
+.w-1\/4 {
+  width: 25%;
+}
+
+.h-auto {
+  height: auto;
+}
+
+.min-h-full {
+  min-height: 100%;
+}
+
+.max-w-container {
+  max-width: 1200px;
+}
+
+/* ===== OVERFLOW UTILITIES ===== */
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.overflow-auto {
+  overflow: auto;
+}
+
+.overflow-x-auto {
+  overflow-x: auto;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
+}
+
+.overflow-x-hidden {
+  overflow-x: hidden;
+}
+
+.overflow-y-hidden {
+  overflow-y: hidden;
+}
+
+/* ===== INTERACTION UTILITIES ===== */
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.cursor-not-allowed {
+  cursor: not-allowed;
+}
+
+.pointer-events-none {
+  pointer-events: none;
+}
+
+.pointer-events-auto {
+  pointer-events: auto;
+}
+
+.select-none {
+  user-select: none;
+}
+
+.select-text {
+  user-select: text;
+}
+
+/* ===== RESPONSIVE UTILITIES ===== */
+
+@media (max-width: 768px) {
+  .hidden-mobile {
+    display: none;
+  }
+
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ============================================================
+   GLOBAL BUTTON STYLES - All screens (outside & inside dialogs)
+   Unified styling for primary, warn, danger, success buttons
+   ============================================================ */
+
+/* Primary Button - Orange (Save, Submit, Create, Yes) */
+button[mat-raised-button][color="primary"],
+button[mat-flat-button][color="primary"],
+button[mat-button][color="primary"] {
+  background-color: theme.$color-primary !important;
+  color: white !important;
+  font-weight: 500 !important;
+  transition: all theme.$transition-base !important;
+
+  &:hover:not(:disabled) {
+    background-color: theme.$color-primary-dark !important;
+    box-shadow: theme.$shadow-light !important;
+  }
+
+  &:active:not(:disabled) {
+    background-color: #e68900 !important;
+    box-shadow: none !important;
+  }
+
+  &:focus:not(:disabled) {
+    outline: 2px solid theme.$color-primary !important;
+    outline-offset: 2px !important;
+  }
+
+  &:disabled {
+    background-color: theme.$color-primary !important;
+    color: rgba(255, 255, 255, 0.5) !important;
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+  }
+
+  mat-icon {
+    margin-right: theme.$spacing-sm !important;
+  }
+}
+
+/* Warn Button - Blue (Cancel, No, Close) */
+button[mat-raised-button][color="warn"],
+button[mat-flat-button][color="warn"],
+button[mat-button][color="warn"] {
+  background-color: theme.$color-secondary !important;
+  color: white !important;
+  font-weight: 500 !important;
+  transition: all theme.$transition-base !important;
+
+  &:hover:not(:disabled) {
+    background-color: theme.$color-secondary-hover !important;
+    box-shadow: theme.$shadow-light !important;
+  }
+
+  &:active:not(:disabled) {
+    background-color: theme.$color-secondary-dark !important;
+    box-shadow: none !important;
+  }
+
+  &:focus:not(:disabled) {
+    outline: 2px solid theme.$color-secondary !important;
+    outline-offset: 2px !important;
+  }
+
+  &:disabled {
+    background-color: theme.$color-secondary !important;
+    color: rgba(255, 255, 255, 0.5) !important;
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+  }
+
+  mat-icon {
+    margin-right: theme.$spacing-sm !important;
+  }
+}
+
+/* Accent Button - Green (OK, Confirm, Success) */
+button[mat-raised-button][color="accent"],
+button[mat-flat-button][color="accent"],
+button[mat-button][color="accent"] {
+  background-color: theme.$color-success !important;
+  color: white !important;
+  font-weight: 500 !important;
+  transition: all theme.$transition-base !important;
+
+  &:hover:not(:disabled) {
+    background-color: #45a049 !important;
+    box-shadow: theme.$shadow-light !important;
+  }
+
+  &:active:not(:disabled) {
+    background-color: #3d8b40 !important;
+    box-shadow: none !important;
+  }
+
+  &:focus:not(:disabled) {
+    outline: 2px solid theme.$color-success !important;
+    outline-offset: 2px !important;
+  }
+
+  &:disabled {
+    background-color: theme.$color-success !important;
+    color: rgba(255, 255, 255, 0.5) !important;
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+  }
+
+  mat-icon {
+    margin-right: theme.$spacing-sm !important;
+  }
+}
+
+/* Default Button - Text only (plain button without color attribute) */
+button[mat-button]:not([color]),
+button[mat-stroked-button]:not([color]) {
+  color: theme.$color-error !important;
+  font-weight: 500 !important;
+  transition: all theme.$transition-base !important;
+
+  &:hover:not(:disabled) {
+    background-color: rgba(176, 0, 32, 0.08) !important;
+  }
+
+  &:active:not(:disabled) {
+    background-color: rgba(176, 0, 32, 0.12) !important;
+  }
+
+  &:disabled {
+    color: rgba(0, 0, 0, 0.4) !important;
+    cursor: not-allowed !important;
+  }
+}
+
+/* Icon Button - Consistent across all screens */
+button[mat-icon-button] {
+  transition: all theme.$transition-base !important;
+
+  &:hover:not(:disabled) {
+    background-color: rgba(0, 0, 0, 0.04) !important;
+  }
+
+  &:disabled {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+  }
+
+  mat-icon {
+    color: inherit !important;
+  }
+}
+
+/* Mini Button - Small icon button */
+button[mat-mini-fab] {
+  background-color: theme.$color-primary !important;
+  color: white !important;
+  transition: all theme.$transition-base !important;
+
+  &:hover:not(:disabled) {
+    background-color: theme.$color-primary-dark !important;
+    box-shadow: theme.$shadow-medium !important;
+  }
+
+  &:disabled {
+    background-color: theme.$color-primary !important;
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+  }
+}
+
+/* FAB Button - Floating Action Button */
+button[mat-fab] {
+  background-color: theme.$color-primary !important;
+  color: white !important;
+  transition: all theme.$transition-base !important;
+
+  &:hover:not(:disabled) {
+    background-color: theme.$color-primary-dark !important;
+    box-shadow: theme.$shadow-heavy !important;
+  }
+
+  &:disabled {
+    background-color: theme.$color-primary !important;
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+  }
+}
+
+/* Danger Button - Red (Delete, Remove, Discard) - Custom class */
+button.btn-danger,
+button[mat-raised-button].btn-danger,
+button[mat-flat-button].btn-danger,
+button[mat-button].btn-danger {
+  background-color: theme.$color-error !important;
+  color: white !important;
+  font-weight: 500 !important;
+  transition: all theme.$transition-base !important;
+
+  &:hover:not(:disabled) {
+    background-color: #d00020 !important;
+    box-shadow: theme.$shadow-light !important;
+  }
+
+  &:active:not(:disabled) {
+    background-color: #c00020 !important;
+    box-shadow: none !important;
+  }
+
+  &:focus:not(:disabled) {
+    outline: 2px solid theme.$color-error !important;
+    outline-offset: 2px !important;
+  }
+
+  &:disabled {
+    background-color: theme.$color-error !important;
+    color: rgba(255, 255, 255, 0.5) !important;
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+  }
+
+  mat-icon {
+    margin-right: theme.$spacing-sm !important;
+  }
+}
+
+/* Warning Button - Yellow (Caution, Alert) - Custom class */
+button.btn-warning,
+button[mat-raised-button].btn-warning,
+button[mat-flat-button].btn-warning,
+button[mat-button].btn-warning {
+  background-color: theme.$color-warning !important;
+  color: white !important;
+  font-weight: 500 !important;
+  transition: all theme.$transition-base !important;
+
+  &:hover:not(:disabled) {
+    background-color: #f57f17 !important;
+    box-shadow: theme.$shadow-light !important;
+  }
+
+  &:active:not(:disabled) {
+    background-color: #f57f17 !important;
+    box-shadow: none !important;
+  }
+
+  &:focus:not(:disabled) {
+    outline: 2px solid theme.$color-warning !important;
+    outline-offset: 2px !important;
+  }
+
+  &:disabled {
+    background-color: theme.$color-warning !important;
+    color: rgba(255, 255, 255, 0.5) !important;
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+  }
+
+  mat-icon {
+    margin-right: theme.$spacing-sm !important;
+  }
+}
+
+/* Info Button - Blue (Info, Help) - Custom class */
+button.btn-info,
+button[mat-raised-button].btn-info,
+button[mat-flat-button].btn-info,
+button[mat-button].btn-info {
+  background-color: theme.$color-info !important;
+  color: white !important;
+  font-weight: 500 !important;
+  transition: all theme.$transition-base !important;
+
+  &:hover:not(:disabled) {
+    background-color: #1565c0 !important;
+    box-shadow: theme.$shadow-light !important;
+  }
+
+  &:active:not(:disabled) {
+    background-color: #0d47a1 !important;
+    box-shadow: none !important;
+  }
+
+  &:focus:not(:disabled) {
+    outline: 2px solid theme.$color-info !important;
+    outline-offset: 2px !important;
+  }
+
+  &:disabled {
+    background-color: theme.$color-info !important;
+    color: rgba(255, 255, 255, 0.5) !important;
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+  }
+
+  mat-icon {
+    margin-right: theme.$spacing-sm !important;
+  }
+}
+
+/* Button Sizes */
+.btn-sm,
+button.btn-sm {
+  padding: theme.$spacing-xs theme.$spacing-md !important;
+  font-size: theme.$font-size-small !important;
+}
+
+.btn-lg,
+button.btn-lg {
+  padding: theme.$spacing-md theme.$spacing-lg !important;
+  font-size: theme.$font-size-large !important;
+}
+
+/* Button with icon and text spacing */
+button[mat-raised-button],
+button[mat-flat-button],
+button[mat-button] {
+  &:not([mat-icon-button]) {
+    mat-icon {
+      margin-right: theme.$spacing-sm !important;
+      vertical-align: middle !important;
+    }
+
+    mat-icon:last-child:only-child {
+      margin-right: 0 !important;
+    }
+  }
+}
+
+/* Button group spacing */
+.button-group button,
+mat-dialog-actions button {
+  transition: all theme.$transition-base !important;
+}
+
+/* Material Button Theming - Orange Primary & Blue Warn */
+::ng-deep {
+  /* ========== GLOBAL DIALOG BACKDROP - Remove shadow/overlay ========== */
+  /* Ensure all CDK overlay backdrops are fully transparent across all dialogs */
+  .cdk-overlay-backdrop {
+    background-color: transparent !important;
+    background: transparent !important;
+    opacity: 1 !important;
+    pointer-events: none !important;
+  }
+
+  .cdk-overlay-backdrop.cdk-overlay-backdrop-show {
+    background-color: transparent !important;
+    background: transparent !important;
+    opacity: 1 !important;
+    pointer-events: none !important;
+  }
+
+  /* Ensure overlay container doesn't add any background */
+  .cdk-overlay-container {
+    background-color: transparent !important;
+    pointer-events: auto !important;
+  }
+
+  .cdk-overlay-pane {
+    box-shadow: none !important;
+  }
+
+  .cdk-overlay-pane .cdk-overlay-backdrop {
+    background: transparent !important;
+    background-color: transparent !important;
+    opacity: 1 !important;
+    pointer-events: none !important;
+  }
+
+  /* Ensure Material's default overlay backdrop color doesn't apply */
+  .cdk-overlay-dark-backdrop {
+    background-color: transparent !important;
+    opacity: 1 !important;
+    pointer-events: none !important;
+  }
+
+  /* Remove all shadows from Material dialog containers and surfaces */
+  .mat-mdc-dialog-container {
+    box-shadow: none !important;
+  }
+
+  .mat-mdc-dialog-surface,
+  .mdc-dialog__surface {
+    box-shadow: none !important;
+    border: 1px solid #e5e7eb !important;
+  }
+
+  /* Remove Material elevation classes that add shadows */
+  .mdc-elevation--z1,
+  .mdc-elevation--z2,
+  .mdc-elevation--z4,
+  .mdc-elevation--z8,
+  .mdc-elevation--z16,
+  .mdc-elevation--z24 {
+    box-shadow: none !important;
+  }
+
+  /* Search field - force orange border override */
+  mat-form-field.search-field,
+  .search-field,
+  .search-type-field,
+  .user-select-field,
+  .copy-field,
+  .search-input-field,
+  .info-field {
+    --mdc-theme-primary: #ff9800 !important;
+    --mat-form-field-focus-select-arrow-color: #ff9800 !important;
+
+    .mdc-notched-outline__leading,
+    .mat-mdc-notch-piece.mdc-notched-outline__leading {
+      border-top: 1px solid #ff9800 !important;
+      border-bottom: 1px solid #ff9800 !important;
+      border-left: 1px solid #ff9800 !important;
+      background-clip: padding-box !important;
+      box-shadow: none !important;
+      min-width: 12px !important;
+      width: 12px !important;
+      border-radius: 4px 0 0 4px !important;
+      height: 100%;
+    }
+
+    .mdc-notched-outline__notch,
+    .mat-mdc-notch-piece.mdc-notched-outline__notch {
+      border-bottom: 1px solid #ff9800 !important;
+      border-left: none !important;
+      border-right: none !important;
+    }
+
+    .mat-mdc-notch-piece.mdc-notched-outline__trailing {
+      border-top: 1px solid #ff9800 !important;
+      border-bottom: 1px solid #ff9800 !important;
+      border-right: 1px solid #ff9800 !important;
+      border-radius: 0 4px 4px 0 !important;
+    }
+
+    /* Focused state */
+    &.mat-focused,
+    .mdc-text-field--focused {
+      .mdc-notched-outline__leading,
+      .mat-mdc-notch-piece.mdc-notched-outline__leading {
+        border-top: 2px solid #fb8500 !important;
+        border-bottom: 2px solid #fb8500 !important;
+        border-left: 2px solid #fb8500 !important;
+      }
+
+      .mdc-notched-outline__notch,
+      .mat-mdc-notch-piece.mdc-notched-outline__notch {
+        border-bottom: 2px solid #fb8500 !important;
+      }
+
+      .mat-mdc-notch-piece.mdc-notched-outline__trailing {
+        border-top: 2px solid #fb8500 !important;
+        border-bottom: 2px solid #fb8500 !important;
+        border-right: 2px solid #fb8500 !important;
+      }
+    }
+  }
+
+  /* Primary button - Orange */
+  button[mat-raised-button][color="primary"],
+  button[mat-flat-button][color="primary"],
+  button[mat-button][color="primary"],
+  .mdc-button--raised[data-color="primary"],
+  .mat-mdc-raised-button.mat-primary {
+    background-color: theme.$color-primary !important;
+    color: white !important;
+
+    &:hover:not(:disabled) {
+      background-color: theme.$color-primary-dark !important;
+    }
+
+    &:active:not(:disabled) {
+      background-color: #e68900 !important;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  /* Warn button - Blue */
+  button[mat-raised-button][color="warn"],
+  button[mat-flat-button][color="warn"],
+  button[mat-button][color="warn"],
+  .mdc-button--raised[data-color="warn"],
+  .mat-mdc-raised-button.mat-warn {
+    background-color: theme.$color-secondary !important;
+    color: white !important;
+
+    &:hover:not(:disabled) {
+      background-color: theme.$color-secondary-hover !important;
+    }
+
+    &:active:not(:disabled) {
+      background-color: theme.$color-secondary-dark !important;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  /* Plain buttons - Red text */
+  button[mat-button]:not([color]),
+  .mat-mdc-button:not(.mat-primary):not(.mat-warn) {
+    color: theme.$color-error !important;
+
+    &:hover:not(:disabled) {
+      background-color: rgba(176, 0, 32, 0.08) !important;
+    }
+  }
+
+  /* Stroked buttons */
+  button[mat-stroked-button][color="primary"] {
+    color: theme.$color-primary !important;
+    border-color: theme.$color-primary !important;
+
+    &:hover:not(:disabled) {
+      background-color: rgba(255, 152, 0, 0.08) !important;
+    }
+  }
+
+  button[mat-stroked-button][color="warn"] {
+    color: theme.$color-error !important;
+    border-color: theme.$color-error !important;
+
+    &:hover:not(:disabled) {
+      background-color: rgba(176, 0, 32, 0.08) !important;
+    }
+  }
+
+  /* Lookup button styling */
+  .lookup-btn {
+    background-color: theme.$color-primary !important;
+    color: white !important;
+    border: none !important;
+
+    &:hover:not(:disabled) {
+      background-color: theme.$color-primary-dark !important;
+    }
+
+    &:active:not(:disabled) {
+      background-color: #e68900 !important;
+    }
+  }
+
+  /* Override Material Design outline color globally for all outlined form fields */
+  .mdc-notched-outline {
+    --mdc-notched-outline-color: #d3d3d3 !important;
+  }
+
+  /* Search field specific - orange outline */
+  .search-field .mdc-notched-outline {
+    --mdc-notched-outline-color: #ff9800 !important;
+  }
+}
+
+/* Global Material Tab Styling - Orange (#ff9800) - PERSISTENT */
+::ng-deep {
+  /* Override Material Design CSS variables globally */
+  mat-tab-group {
+    --mat-tab-active-label-text-color: #ff9800 !important;
+    --mat-tab-inactive-label-text-color: #6b7280 !important;
+    --mat-tab-focus-state-layer-color: #ff9800 !important;
+    --mdc-tab-indicator-color: #ff9800 !important;
+    --mat-tab-indicator-color: #ff9800 !important;
+  }
+
+  /* DEFAULT: Inactive tab label text color */
+  .mat-mdc-tab-label .mdc-tab__text-label {
+    color: #6b7280 !important;
+  }
+
+  /* ACTIVE tab label text color - multiple selectors for persistence */
+  .mat-mdc-tab-label[aria-selected="true"] .mdc-tab__text-label,
+  .mat-mdc-tab-label.mat-mdc-tab-label-active .mdc-tab__text-label,
+  mat-mdc-tab.mdc-tab--active .mdc-tab__text-label,
+  .mdc-tab--active .mdc-tab__text-label {
+    color: #ff9800 !important;
+  }
+
+  /* Active tab background color */
+  .mat-mdc-tab-label[aria-selected="true"],
+  .mat-mdc-tab-label.mat-mdc-tab-label-active,
+  mat-mdc-tab.mdc-tab--active {
+    background-color: #f1ece5 !important;
+  }
+
+  /* Active tab container background */
+  mat-mdc-tab[aria-selected="true"],
+  .mdc-tab--active {
+    background-color: #f1ece5 !important;
+  }
+
+  /* Tab role selector */
+  [role="tab"][aria-selected="true"] {
+    background-color: theme.$color-selected-bg !important;
+  }
+
+  /* Tab hover state - ORANGE */
+  .mat-mdc-tab-label:hover:not(.mat-mdc-tab-label-disabled):not([aria-selected="true"]) .mdc-tab__text-label {
+    color: theme.$color-primary !important;
+  }
+
+  /* Tab indicator - show with orange color at BOTTOM */
+  .mdc-tab-indicator {
+    display: block !important;
+    height: 4px !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    top: auto !important;
+  }
+
+  .mdc-tab--active .mdc-tab-indicator {
+    display: block !important;
+    height: 4px !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    top: auto !important;
+  }
+
+  /* Active tab thick bottom line */
+  .mdc-tab-indicator::before,
+  .mdc-tab-indicator::after {
+    display: none !important;
+  }
+
+  .mdc-tab-indicator__content {
+    display: block !important;
+    height: 4px !important;
+    background-color: theme.$color-primary !important;
+    border: none !important;
+    width: 100% !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    top: auto !important;
+  }
+
+  /* Tab indicator underline - orange */
+  .mdc-tab-indicator__content--underline {
+    display: block !important;
+    height: 4px !important;
+    background-color: theme.$color-primary !important;
+    border-bottom: 4px solid theme.$color-primary !important;
+    width: 100% !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    top: auto !important;
+  }
+
+  /* Active tab bottom border styling */
+  .mat-mdc-tab-label.mat-mdc-tab-label-active {
+    position: relative;
+  }
+
+  .mat-mdc-tab-label[aria-selected="true"] {
+    position: relative;
+  }
+
+  /* Material Design focus state - ORANGE */
+  mat-mdc-tab.mdc-tab--active:focus .mdc-tab__text-label {
+    color: theme.$color-primary !important;
+  }
+
+  mat-mdc-tab.mdc-tab--active:hover .mdc-tab__text-label {
+    color: theme.$color-primary !important;
+  }
+
+  /* ============ ADMIN NAVIGATION STYLING ============ */
+  /* Override Material list item styles for admin navigation */
+  .admin-nav .mat-mdc-list-item {
+    color: #8a4d00 !important;
+  }
+
+  .admin-nav .mdc-list-item__content {
+    color: #8a4d00 !important;
+  }
+
+  .admin-nav .mat-mdc-list-item.active {
+    background-color: #f1ece5 !important;
+    color: #ff9800 !important;
+  }
+
+  .admin-nav .mat-mdc-list-item.active .mat-icon {
+    color: #ff9800 !important;
+  }
+
+  .admin-nav .mat-mdc-list-item.active .mdc-list-item__content {
+    color: #ff9800 !important;
+  }
+
+  .admin-nav a.active {
+    background-color: #f1ece5 !important;
+  }
+
+  .admin-nav a.active .mat-icon {
+    color: #ff9800 !important;
+  }
+
+  .admin-nav a.active span {
+    color: #ff9800 !important;
+  }
+
+  .admin-nav a.active .mdc-list-item__content {
+    color: #ff9800 !important;
+  }
+
+  .admin-nav .mat-icon {
+    color: #8a4d00 !important;
+  }
+
+  .admin-nav .mat-mdc-list-item:hover {
+    background-color: #f1ece5 !important;
+  }
+
+  /* Router link active state */
+  .admin-nav a[routerLinkActive].active {
+    background-color: #f1ece5 !important;
+    border-left: 4px solid #ff9800 !important;
+    padding-left: 8px !important;
+  }
+
+  .admin-nav a[routerLinkActive].active span {
+    color: #ff9800 !important;
+  }
+
+  .admin-nav a[routerLinkActive].active .mat-icon {
+    color: #ff9800 !important;
+  }
+}
+
+/* Global Search Field Styling - ORANGE borders everywhere */
+::ng-deep {
+  .search-field {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: theme.$color-primary !important;
+    }
+
+    &.mat-focused {
+      .mdc-notched-outline__leading,
+      .mdc-notched-outline__notch,
+      .mdc-notched-outline__trailing {
+        border-color: theme.$color-primary-dark !important;
+      }
+    }
+
+    /* Search icon - ORANGE */
+    .mat-icon,
+    mat-icon {
+      color: #ff9800 !important;
+    }
+
+    /* Search label - ORANGE */
+    mat-label {
+      color: theme.$color-primary !important;
+    }
+
+    /* Placeholder text - ORANGE with 40% opacity */
+    input::placeholder {
+      color: theme.$color-primary-light !important;
+    }
+  }
+
+  mat-form-field.search-field {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: theme.$color-primary !important;
+    }
+
+    &.mat-focused {
+      .mdc-notched-outline__leading,
+      .mdc-notched-outline__notch,
+      .mdc-notched-outline__trailing {
+        border-color: theme.$color-primary-dark !important;
+      }
+    }
+
+    /* Search icon - ORANGE */
+    .mat-icon,
+    mat-icon {
+      color: theme.$color-primary !important;
+    }
+
+    /* Search label - ORANGE */
+    mat-label {
+      color: theme.$color-primary !important;
+    }
+
+    /* Placeholder text - ORANGE with 40% opacity */
+    input::placeholder {
+      color: theme.$color-primary-light !important;
+    }
+  }
+
+  /* All form field labels in dialogs - ORANGE */
+  .themed-dialog mat-label,
+  .themed-dialog .mat-mdc-form-field-label {
+    color: theme.$color-primary !important;
+  }
+
+  /* Required field asterisk in dialogs - ORANGE */
+  .themed-dialog .mat-mdc-form-field-required-marker {
+    color: theme.$color-primary !important;
+  }
+}
+
+/* Spinner/Progress Indicator - ORANGE */
+mat-spinner,
+.mat-mdc-progress-spinner,
+mat-progress-spinner {
+  circle {
+    stroke: theme.$color-primary !important;
+  }
+}
+
+/* CSS variables for dynamic theming */
+:root {
+  --mdc-theme-primary: #ff9800;
+}
+
+/* ============================================================
+   DARK / LIGHT MODE — Global token application
+   The [data-theme] attribute is toggled on <html> by ThemeService
+   ============================================================ */
+
+html, body {
+  background-color: var(--color-bg-page, #f5f5f5);
+  color: var(--color-text-primary, #212121);
+  transition: background-color 300ms ease, color 300ms ease;
+}
+
+/* Smooth transition on all elements that use theme colors */
+*,
+*::before,
+*::after {
+  transition: background-color 300ms ease, color 300ms ease, border-color 300ms ease;
+}
+
+/* ============================================================
+   DARK MODE — Comprehensive overrides
+   Every hardcoded light-mode color is overridden here.
+   Uses !important to pierce Angular view-encapsulation shims.
+   ============================================================ */
+
+/* ---- Base page & body ---- */
+[data-theme="dark"] body,
+[data-theme="dark"] html {
+  background-color: #121212 !important;
+  color: #e0e0e0 !important;
+}
+
+/* ---- Material surface containers ---- */
+[data-theme="dark"] .mat-mdc-card,
+[data-theme="dark"] mat-card,
+[data-theme="dark"] .mat-mdc-dialog-surface,
+[data-theme="dark"] .mat-mdc-dialog-container,
+[data-theme="dark"] .mat-expansion-panel,
+[data-theme="dark"] .mat-mdc-tab-body-wrapper,
+[data-theme="dark"] .mat-sidenav,
+[data-theme="dark"] .mat-drawer,
+[data-theme="dark"] .mat-mdc-list,
+[data-theme="dark"] .mat-mdc-table,
+[data-theme="dark"] mat-expansion-panel {
+  background-color: #1e1e1e !important;
+  color: #e0e0e0 !important;
+}
+
+/* ---- App header / toolbar ---- */
+[data-theme="dark"] .app-header {
+  background: #000000 !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.6) !important;
+}
+
+[data-theme="dark"] .lumen-toolbar {
+  background: #000000 !important;
+}
+
+[data-theme="dark"] .lumen-logo {
+  filter: brightness(0) invert(1) !important;
+}
+
+[data-theme="dark"] .app-title {
+  color: #ff9800 !important;
+}
+
+[data-theme="dark"] .action-btn,
+[data-theme="dark"] .theme-toggle-btn {
+  color: #64b5f6 !important;
+}
+
+[data-theme="dark"] .orange-accent-bar {
+  background: linear-gradient(90deg, #b34700 0%, #cc7a00 100%) !important;
+}
+
+/* ---- Landing page header — light blue in dark mode ---- */
+[data-theme="dark"] .landing-header {
+  background: #1a3a6b !important;
+  border-top-color: #2a5298 !important;
+  border-bottom-color: #2a5298 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="dark"] .nav-item {
+  color: #e0e0e0 !important;
+  background: transparent !important;
+}
+
+[data-theme="dark"] .nav-item mat-icon {
+  color: #ff9800 !important;
+}
+
+[data-theme="dark"] .nav-item:hover:not(:disabled),
+[data-theme="dark"] .nav-item.active {
+  background-color: #2a2520 !important;
+  color: #ff9800 !important;
+}
+
+/* Light mode - Back Button styling - OVERRIDE DEFAULT BUTTON RED COLOR */
+
+/* Match exact specificity of button[mat-button]:not([color]) */
+button[mat-button].back-link,
+button[mat-stroked-button].back-link,
+.back-link,
+button.back-link {
+  color: theme.$color-secondary !important;
+  
+  mat-icon {
+    color: theme.$color-secondary !important;
+  }
+  
+  &:hover:not(:disabled) {
+    color: theme.$color-primary !important;
+    
+    mat-icon {
+      color: theme.$color-primary !important;
+    }
+  }
+  
+  &:focus:not(:disabled) {
+    outline: 2px solid theme.$color-primary !important;
+    outline-offset: 2px !important;
+  }
+}
+
+/* Also target nav-item back-button */
+.nav-item.back-button {
+  color: theme.$color-secondary !important;
+}
+
+.nav-item.back-button {
+  color: theme.$color-secondary !important;
+}
+
+.nav-item.back-button mat-icon {
+  color: theme.$color-secondary !important;
+}
+
+.nav-item.back-button:hover:not(:disabled) {
+  color: theme.$color-primary !important;
+
+  mat-icon {
+    color: theme.$color-primary !important;
+  }
+}
+
+[data-theme="dark"] .nav-item.back-button {
+  color: #64b5f6 !important;
+}
+
+[data-theme="dark"] .nav-item.back-button mat-icon {
+  color: #64b5f6 !important;
+}
+
+[data-theme="dark"] .nav-item.back-button:hover:not(:disabled) {
+  background-color: #1a2a3a !important;
+  color: theme.$color-primary !important;
+
+  mat-icon {
+    color: theme.$color-primary !important;
+  }
+}
+
+/* Dark mode - Back link buttons - OVERRIDE DEFAULT BUTTON RED COLOR */
+[data-theme="dark"] button[mat-button].back-link,
+[data-theme="dark"] button[mat-stroked-button].back-link,
+[data-theme="dark"] .back-link,
+[data-theme="dark"] button.back-link {
+  color: #64b5f6 !important;
+  
+  mat-icon {
+    color: #64b5f6 !important;
+  }
+  
+  &:hover:not(:disabled) {
+    color: theme.$color-primary !important;
+    
+    mat-icon {
+      color: theme.$color-primary !important;
+    }
+  }
+  
+  &:focus:not(:disabled) {
+    outline: 2px solid theme.$color-primary !important;
+    outline-offset: 2px !important;
+  }
+}
+
+[data-theme="dark"] .vertical-divider,
+[data-theme="dark"] .header-divider-v {
+  background-color: #424242 !important;
+}
+
+[data-theme="dark"] .project-title-right {
+  color: #ff9800 !important;
+}
+
+/* ---- Landing page body ---- */
+[data-theme="dark"] .landing-body {
+  background: #121212 !important;
+}
+
+[data-theme="dark"] .dashboard-welcome {
+  background: #1e1e1e !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5) !important;
+}
+
+[data-theme="dark"] .dashboard-welcome h1 {
+  color: #64b5f6 !important;
+}
+
+[data-theme="dark"] .dashboard-welcome p {
+  color: #bdbdbd !important;
+}
+
+[data-theme="dark"] .dashboard-welcome li {
+  color: #e0e0e0 !important;
+  border-bottom-color: #424242 !important;
+}
+
+/* ---- Tab group ---- */
+[data-theme="dark"] .mat-mdc-tab-labels,
+[data-theme="dark"] .mat-mdc-tab-header {
+  background: #1e1e1e !important;
+  border-bottom-color: #424242 !important;
+}
+
+[data-theme="dark"] .mat-mdc-tab-label .mdc-tab__text-label,
+[data-theme="dark"] .mdc-tab__text-label {
+  color: #9e9e9e !important;
+}
+
+[data-theme="dark"] .mat-mdc-tab-label[aria-selected="true"] .mdc-tab__text-label,
+[data-theme="dark"] .mdc-tab--active .mdc-tab__text-label {
+  color: #ff9800 !important;
+}
+
+[data-theme="dark"] .mat-mdc-tab-label[aria-selected="true"],
+[data-theme="dark"] .mdc-tab--active {
+  background-color: #2a2520 !important;
+}
+
+[data-theme="dark"] .mat-mdc-tab-body-wrapper {
+  background: #121212 !important;
+}
+
+/* ---- Field labels ---- */
+[data-theme="dark"] .field-label {
+  color: #ff9800 !important;
+}
+
+/* ---- Native inputs / selects / textareas ---- */
+[data-theme="dark"] input.field-input,
+[data-theme="dark"] select.field-input,
+[data-theme="dark"] textarea.field-input {
+  background: #2c2c2c !important;
+  border-color: #616161 !important;
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] input.field-input:focus,
+[data-theme="dark"] select.field-input:focus,
+[data-theme="dark"] textarea.field-input:focus {
+  border-color: #64b5f6 !important;
+  box-shadow: 0 0 0 2px rgba(100, 181, 246, 0.2) !important;
+}
+
+[data-theme="dark"] input.field-input:disabled,
+[data-theme="dark"] input.field-input[readonly],
+[data-theme="dark"] select.field-input:disabled,
+[data-theme="dark"] textarea.field-input:disabled,
+[data-theme="dark"] textarea.field-input[readonly] {
+  background: #3d2a10 !important;
+  border-color: #ff9800 !important;
+  color: #e0d5c5 !important;
+}
+
+[data-theme="dark"] .field-input-static {
+  background: #2c2c2c !important;
+  border-color: #616161 !important;
+  color: #9e9e9e !important;
+}
+
+/* ---- Contact / footer tables ---- */
+[data-theme="dark"] .footer-table,
+[data-theme="dark"] .contact-tab-table table {
+  background: #1e1e1e !important;
+}
+
+[data-theme="dark"] .footer-table th {
+  background: #2a1a08 !important;
+  color: #ff9800 !important;
+  border-color: #424242 !important;
+}
+
+[data-theme="dark"] .footer-table td {
+  background: #1e1e1e !important;
+  color: #e0e0e0 !important;
+  border-color: #424242 !important;
+}
+
+[data-theme="dark"] .footer-table tr:hover td {
+  background: #2a2520 !important;
+}
+
+/* ---- Material table (mat-table) ---- */
+[data-theme="dark"] .mat-mdc-header-row,
+[data-theme="dark"] tr.mat-mdc-header-row {
+  background-color: #2a1a08 !important;
+}
+
+[data-theme="dark"] .mat-mdc-header-cell {
+  color: #ff9800 !important;
+  border-bottom-color: #424242 !important;
+}
+
+[data-theme="dark"] .mat-mdc-row,
+[data-theme="dark"] tr.mat-mdc-row {
+  background-color: #1e1e1e !important;
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .mat-mdc-row:hover,
+[data-theme="dark"] tr.mat-mdc-row:hover {
+  background-color: #2a2520 !important;
+}
+
+[data-theme="dark"] .mat-mdc-cell {
+  color: #e0e0e0 !important;
+  border-bottom-color: #333 !important;
+}
+
+[data-theme="dark"] tr.selected,
+[data-theme="dark"] .mat-mdc-row.selected {
+  background-color: #3d2a10 !important;
+}
+
+/* ---- Generic page containers (work-items, run-list, notes, edit, reports) ---- */
+[data-theme="dark"] .page-header,
+[data-theme="dark"] .page-container,
+[data-theme="dark"] .page-body,
+[data-theme="dark"] .tab-content-spacing,
+[data-theme="dark"] .section-container,
+[data-theme="dark"] .details-row {
+  background-color: #121212 !important;
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .page-header {
+  background: #1e1e1e !important;
+  border-bottom-color: #424242 !important;
+}
+
+/* Light mode - Back Button styling (generic) */
+.back-button {
+  color: theme.$color-secondary !important;
+}
+
+.back-button mat-icon {
+  color: theme.$color-secondary !important;
+}
+
+.back-button:hover:not(:disabled) {
+  color: theme.$color-primary !important;
+
+  mat-icon {
+    color: theme.$color-primary !important;
+  }
+}
+
+[data-theme="dark"] .back-button {
+  color: #64b5f6 !important;
+}
+
+[data-theme="dark"] .back-button mat-icon {
+  color: #64b5f6 !important;
+}
+
+[data-theme="dark"] .back-button:hover:not(:disabled) {
+  color: theme.$color-primary !important;
+
+  mat-icon {
+    color: theme.$color-primary !important;
+  }
+}
+
+/* ---- Action icon buttons in page headers ---- */
+[data-theme="dark"] .action-btn[mat-icon-button] {
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .action-btn[mat-icon-button]:hover:not(:disabled) {
+  background-color: #2a2520 !important;
+  color: #ff9800 !important;
+}
+
+/* ---- Notes component ---- */
+[data-theme="dark"] .notes-container,
+[data-theme="dark"] .notes-body,
+[data-theme="dark"] .note-card {
+  background: #1e1e1e !important;
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .note-title,
+[data-theme="dark"] .note-date,
+[data-theme="dark"] .section-label {
+  color: #ff9800 !important;
+}
+
+[data-theme="dark"] .note-text,
+[data-theme="dark"] .note-content {
+  color: #e0e0e0 !important;
+  background: #2c2c2c !important;
+}
+
+/* ---- Reports ---- */
+[data-theme="dark"] .reports-container,
+[data-theme="dark"] .report-section,
+[data-theme="dark"] .bom-table-container {
+  background: #1e1e1e !important;
+  color: #e0e0e0 !important;
+}
+
+/* ---- Edit component ---- */
+[data-theme="dark"] .edit-container,
+[data-theme="dark"] .edit-section,
+[data-theme="dark"] .edit-table-wrapper {
+  background: #1e1e1e !important;
+  color: #e0e0e0 !important;
+}
+
+/* ---- Admin component ---- */
+[data-theme="dark"] .admin-container,
+[data-theme="dark"] .admin-section {
+  background: #1e1e1e !important;
+  color: #e0e0e0 !important;
+}
+
+/* ---- Material Menu ---- */
+[data-theme="dark"] .mat-mdc-menu-panel {
+  background-color: #1e1e1e !important;
+  border: 1px solid #424242 !important;
+}
+
+[data-theme="dark"] .mat-mdc-menu-item {
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .mat-mdc-menu-item:hover,
+[data-theme="dark"] .mat-mdc-menu-item:focus {
+  background-color: #2a2520 !important;
+  color: #ff9800 !important;
+}
+
+[data-theme="dark"] .mat-mdc-menu-item mat-icon {
+  color: #ff9800 !important;
+}
+
+/* ---- Material Dialog ---- */
+[data-theme="dark"] .mat-mdc-dialog-surface {
+  background-color: #1e1e1e !important;
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .cdk-overlay-container .mat-mdc-dialog-surface,
+[data-theme="dark"] .cdk-overlay-container .mdc-dialog__surface {
+  background-color: #1e1e1e !important;
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .mat-mdc-dialog-title,
+[data-theme="dark"] .cdk-overlay-container .mat-mdc-dialog-title {
+  color: #ff9800 !important;
+}
+
+[data-theme="dark"] .mat-mdc-dialog-content,
+[data-theme="dark"] mat-dialog-content,
+[data-theme="dark"] .cdk-overlay-container mat-dialog-content {
+  color: #e0e0e0 !important;
+  background-color: #1e1e1e !important;
+}
+
+[data-theme="dark"] .mat-mdc-dialog-actions,
+[data-theme="dark"] mat-dialog-actions {
+  border-top-color: #424242 !important;
+  background-color: #1e1e1e !important;
+}
+
+/* Themed dialog overrides */
+[data-theme="dark"] .themed-dialog {
+  h2[mat-dialog-title],
+  h1[mat-dialog-title],
+  h3[mat-dialog-title],
+  h4[mat-dialog-title],
+  .mat-mdc-dialog-title,
+  h2 {
+    color: #ff9800 !important;
+  }
+}
+
+/* ---- Material Form Fields ---- */
+[data-theme="dark"] .mat-mdc-text-field-wrapper,
+[data-theme="dark"] .mdc-text-field {
+  background-color: #2c2c2c !important;
+}
+
+[data-theme="dark"] .mat-mdc-input-element,
+[data-theme="dark"] input.mat-mdc-input-element,
+[data-theme="dark"] textarea.mat-mdc-input-element {
+  color: #e0e0e0 !important;
+  caret-color: #ff9800 !important;
+}
+
+[data-theme="dark"] .mat-mdc-form-field-label,
+[data-theme="dark"] mat-label {
+  color: #ff9800 !important;
+}
+
+[data-theme="dark"] .mdc-notched-outline__leading,
+[data-theme="dark"] .mat-mdc-notch-piece.mdc-notched-outline__leading {
+  border-top: 1px solid #616161 !important;
+  border-bottom: 1px solid #616161 !important;
+  border-left: 1px solid #616161 !important;
+}
+
+[data-theme="dark"] .mdc-notched-outline__notch,
+[data-theme="dark"] .mat-mdc-notch-piece.mdc-notched-outline__notch {
+  border-bottom: 1px solid #616161 !important;
+}
+
+[data-theme="dark"] .mat-mdc-notch-piece.mdc-notched-outline__trailing {
+  border-top: 1px solid #616161 !important;
+  border-bottom: 1px solid #616161 !important;
+  border-right: 1px solid #616161 !important;
+}
+
+[data-theme="dark"] .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+[data-theme="dark"] .mat-mdc-form-field.mat-focused .mat-mdc-notch-piece.mdc-notched-outline__leading {
+  border-top: 2px solid #ff9800 !important;
+  border-bottom: 2px solid #ff9800 !important;
+  border-left: 2px solid #ff9800 !important;
+}
+
+[data-theme="dark"] .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+[data-theme="dark"] .mat-mdc-form-field.mat-focused .mat-mdc-notch-piece.mdc-notched-outline__notch {
+  border-bottom: 2px solid #ff9800 !important;
+}
+
+[data-theme="dark"] .mat-mdc-form-field.mat-focused .mat-mdc-notch-piece.mdc-notched-outline__trailing {
+  border-top: 2px solid #ff9800 !important;
+  border-bottom: 2px solid #ff9800 !important;
+  border-right: 2px solid #ff9800 !important;
+}
+
+/* ---- Select ---- */
+[data-theme="dark"] .mat-mdc-select-value,
+[data-theme="dark"] .mat-mdc-select-trigger,
+[data-theme="dark"] .mat-mdc-select-arrow {
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .mat-mdc-select-panel,
+[data-theme="dark"] .cdk-overlay-pane .mat-mdc-select-panel {
+  background-color: #1e1e1e !important;
+}
+
+[data-theme="dark"] .mat-mdc-option {
+  color: #e0e0e0 !important;
+  background-color: #1e1e1e !important;
+}
+
+/* ============ LIGHT MODE - MAT-SELECT AND MAT-OPTION STYLING ============ */
+/* Match app.component menu styling */
+
+/* Override Material CSS variables for checkbox color in light mode */
+.mat-mdc-option.mat-selected .mat-pseudo-checkbox {
+  --mat-pseudo-checkbox-minimal-selected-checkmark-color: #ff9800 !important;
+}
+
+.mat-mdc-option {
+  --mat-option-selected-state-label-text-color: #ff7043 !important;
+  --mat-sys-on-secondary-container: #ff9800 !important;
+}
+
+.mat-mdc-option {
+  color: #333333 !important;
+  font-weight: 500;
+  font-size: 14px !important;
+  height: 48px !important;
+  transition: all 200ms ease !important;
+}
+
+.mat-mdc-option:hover {
+  background: rgba(255, 152, 0, 0.08) !important;
+}
+
+.mat-mdc-option.mat-selected,
+.mat-mdc-option.mdc-list-item--selected,
+.mat-mdc-option[aria-selected="true"] {
+  background: rgba(255, 152, 0, 0.12) !important;
+}
+
+.mat-mdc-option.mat-selected .mdc-list-item__primary-text,
+.mat-mdc-option[aria-selected="true"] .mdc-list-item__primary-text {
+  color: #ff7043 !important;
+  font-weight: 600 !important;
+}
+
+.mat-mdc-option:hover .mdc-list-item__primary-text {
+  color: #ff7043 !important;
+}
+
+/* Orange checkmark for selected options */
+.mat-mdc-option.mat-selected::before,
+.mat-mdc-option[aria-selected="true"]::before {
+  color: #ff9800 !important;
+}
+
+/* Material checkbox styling for mat-option selected state */
+.mat-mdc-option.mat-selected .mdc-checkbox__checkmark,
+.mat-mdc-option[aria-selected="true"] .mdc-checkbox__checkmark {
+  color: #ff9800 !important;
+}
+
+.mat-mdc-option.mat-selected .mdc-checkbox__background,
+.mat-mdc-option[aria-selected="true"] .mdc-checkbox__background {
+  border-color: #ff9800 !important;
+  background-color: #ff9800 !important;
+}
+
+.mat-mdc-option.mat-selected .mat-mdc-checkbox-frame,
+.mat-mdc-option[aria-selected="true"] .mat-mdc-checkbox-frame {
+  border-color: #ff9800 !important;
+}
+
+/* Override default Material blue checkbox color */
+.mat-mdc-option.mat-selected .mdc-checkbox,
+.mat-mdc-option[aria-selected="true"] .mdc-checkbox {
+  --mdc-theme-primary: #ff9800 !important;
+}
+
+/* ============ DARK MODE - MAT-SELECT AND MAT-OPTION STYLING ============ */
+
+/* ============ STACKED WIZARD DIALOGS - BACKDROP STYLING ============ */
+/* Reduce backdrop opacity for stacked dialogs to keep previous dialogs visible */
+.stacked-wizard-backdrop {
+  background-color: rgba(0, 0, 0, 0.15) !important;
+  opacity: 0.15 !important;
+}
+
+
+/* ============ DARK MODE - MAT-SELECT AND MAT-OPTION STYLING ============ */
+
+/* ============ DARK MODE - MAT-SELECT AND MAT-OPTION STYLING ============ */
+
+/* Override Material CSS variables for checkbox color in dark mode */
+[data-theme="dark"] .mat-mdc-option.mat-selected .mat-pseudo-checkbox {
+  --mat-pseudo-checkbox-minimal-selected-checkmark-color: #ffb74d !important;
+}
+
+[data-theme="dark"] .mat-mdc-option {
+  --mat-option-selected-state-label-text-color: #ffb74d !important;
+  --mat-sys-on-secondary-container: #ffb74d !important;
+}
+
+[data-theme="dark"] .mat-mdc-option {
+  color: #e0e0e0 !important;
+  background-color: #262626 !important;
+}
+
+[data-theme="dark"] .mat-mdc-option:hover {
+  background: rgba(255, 152, 0, 0.2) !important;
+}
+
+[data-theme="dark"] .mat-mdc-option.mat-selected,
+[data-theme="dark"] .mat-mdc-option.mdc-list-item--selected,
+[data-theme="dark"] .mat-mdc-option[aria-selected="true"] {
+  background: rgba(255, 152, 0, 0.25) !important;
+}
+
+[data-theme="dark"] .mat-mdc-option.mat-selected .mdc-list-item__primary-text,
+[data-theme="dark"] .mat-mdc-option[aria-selected="true"] .mdc-list-item__primary-text {
+  color: #ffb74d !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="dark"] .mat-mdc-option:hover .mdc-list-item__primary-text {
+  color: #ffb74d !important;
+}
+
+/* Orange checkmark for selected options in dark mode */
+[data-theme="dark"] .mat-mdc-option.mat-selected::before,
+[data-theme="dark"] .mat-mdc-option[aria-selected="true"]::before {
+  color: #ffb74d !important;
+}
+
+/* Material checkbox styling for mat-option selected state in dark mode */
+[data-theme="dark"] .mat-mdc-option.mat-selected .mdc-checkbox__checkmark,
+[data-theme="dark"] .mat-mdc-option[aria-selected="true"] .mdc-checkbox__checkmark {
+  color: #ffb74d !important;
+}
+
+[data-theme="dark"] .mat-mdc-option.mat-selected .mdc-checkbox__background,
+[data-theme="dark"] .mat-mdc-option[aria-selected="true"] .mdc-checkbox__background {
+  border-color: #ffb74d !important;
+  background-color: #ffb74d !important;
+}
+
+[data-theme="dark"] .mat-mdc-option.mat-selected .mat-mdc-checkbox-frame,
+[data-theme="dark"] .mat-mdc-option[aria-selected="true"] .mat-mdc-checkbox-frame {
+  border-color: #ffb74d !important;
+}
+
+/* Override default Material blue checkbox color in dark mode */
+[data-theme="dark"] .mat-mdc-option.mat-selected .mdc-checkbox,
+[data-theme="dark"] .mat-mdc-option[aria-selected="true"] .mdc-checkbox {
+  --mdc-theme-primary: #ffb74d !important;
+}
+
+/* ---- Inline selects (native <select>) ---- */
+[data-theme="dark"] select {
+  background-color: #2c2c2c !important;
+  color: #e0e0e0 !important;
+  border-color: #616161 !important;
+}
+
+[data-theme="dark"] select option {
+  background-color: #2c2c2c !important;
+  color: #e0e0e0 !important;
+}
+
+/* ---- Snackbar ---- */
+[data-theme="dark"] .mat-mdc-snack-bar-container {
+  background-color: #323232 !important;
+  color: #e0e0e0 !important;
+}
+
+/* ---- Tooltip ---- */
+[data-theme="dark"] .mat-mdc-tooltip {
+  background-color: #424242 !important;
+  color: #e0e0e0 !important;
+}
+
+/* ---- Checkbox & Radio ---- */
+[data-theme="dark"] .mat-mdc-checkbox label,
+[data-theme="dark"] .mat-mdc-radio-button label {
+  color: #e0e0e0 !important;
+}
+
+/* ---- Dividers ---- */
+[data-theme="dark"] .mat-divider {
+  border-top-color: #424242 !important;
+}
+
+/* ---- Expansion panel ---- */
+[data-theme="dark"] .mat-expansion-panel-header {
+  background-color: #1e1e1e !important;
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .mat-expansion-panel-header-title {
+  color: #ff9800 !important;
+}
+
+[data-theme="dark"] .mat-expansion-panel-body {
+  background-color: #1e1e1e !important;
+  color: #e0e0e0 !important;
+}
+
+/* ---- Generic headings and text ---- */
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6 {
+  color: #ff9800 !important;
+}
+
+[data-theme="dark"] p,
+[data-theme="dark"] span,
+[data-theme="dark"] label {
+  color: #e0e0e0;
+}
+
+[data-theme="dark"] a {
+  color: #64b5f6 !important;
+}
+
+[data-theme="dark"] strong {
+  color: #ff9800 !important;
+}
+
+/* ---- Scrollbar ---- */
+[data-theme="dark"] {
+  scrollbar-color: #555 #1e1e1e;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: #1e1e1e;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 4px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background-color: #777;
+}
+
+/* ---- Login page ---- */
+[data-theme="dark"] .login-viewport {
+  background: #121212 !important;
+}
+
+[data-theme="dark"] .left-branding-strip {
+  background: #1a1210 !important;
+}
+
+[data-theme="dark"] .login-card {
+  background: #1e1e1e !important;
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .right-info-container {
+  background: #121212 !important;
+}
+
+[data-theme="dark"] .glass-info-box {
+  background: #1e1e1e !important;
+  border-color: #424242 !important;
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .section-title {
+  color: #ff9800 !important;
+}
+
+[data-theme="dark"] .scrollable-info,
+[data-theme="dark"] .scrollable-info p,
+[data-theme="dark"] .scrollable-info li {
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .step-ol li,
+[data-theme="dark"] .existing-users-footer p {
+  color: #e0e0e0 !important;
+}
+
+/* ---- Data-table specific (header background override) ---- */
+[data-theme="dark"] .data-table .mat-mdc-header-cell {
+  background-color: #2a1a08 !important;
+  color: #ff9800 !important;
+}
+
+/* ---- Orange accent bar stays same but slightly muted in dark ---- */
+[data-theme="dark"] .orange-accent-bar {
+  opacity: 0.85;
+}
+
+/* ============================================================
+   Edit nav dropdown menu (panelClass: 'edit-nav-menu')
+   Rendered in CDK overlay — must live in global styles.
+   ============================================================ */
+.edit-nav-menu.mat-mdc-menu-panel {
+  min-width: 200px;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid rgba(255, 152, 0, 0.2) !important;
+  overflow: hidden;
+}
+
+.edit-nav-menu .mat-mdc-menu-content {
+  padding: 4px 0 !important;
+}
+
+.edit-nav-menu .mat-mdc-menu-item {
+  font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  height: 44px;
+  min-height: 44px;
+  padding: 0 16px;
+}
+
+.edit-nav-menu .mat-mdc-menu-item .mat-icon {
+  color: #6b7280;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.edit-nav-menu .mat-mdc-menu-item:hover:not([disabled]),
+.edit-nav-menu .mat-mdc-menu-item:focus:not([disabled]) {
+  background-color: #f1ece5 !important;
+  color: #ff9800 !important;
+}
+
+.edit-nav-menu .mat-mdc-menu-item:hover:not([disabled]) .mat-icon,
+.edit-nav-menu .mat-mdc-menu-item:focus:not([disabled]) .mat-icon {
+  color: #ff9800 !important;
+}
+
+/* Dark mode */
+[data-theme="dark"] .edit-nav-menu.mat-mdc-menu-panel {
+  background-color: #1e1e1e !important;
+  border-color: #424242 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="dark"] .edit-nav-menu .mat-mdc-menu-item {
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .edit-nav-menu .mat-mdc-menu-item .mat-icon {
+  color: #ff9800 !important;
+}
+
+[data-theme="dark"] .edit-nav-menu .mat-mdc-menu-item:hover:not([disabled]),
+[data-theme="dark"] .edit-nav-menu .mat-mdc-menu-item:focus:not([disabled]) {
+  background-color: #2a2520 !important;
+  color: #ff9800 !important;
+}
+
+/* ============================================================
+   DARK MODE — Work Item Wizard & Selection Dialogs
+   All 7 work-item dialog boxes
+   ============================================================ */
+
+/* Shells */
+[data-theme="dark"] .dialog-shell,
+[data-theme="dark"] .wizard-shell,
+[data-theme="dark"] .wi-notes-shell,
+[data-theme="dark"] .confirmation-shell {
+  background: #1e1e1e !important;
+  color: #e0e0e0 !important;
+}
+
+/* Headers */
+[data-theme="dark"] .dialog-header,
+[data-theme="dark"] .wizard-header {
+  background: #1e1e1e !important;
+}
+
+[data-theme="dark"] .dialog-title,
+[data-theme="dark"] .wizard-title {
+  color: #ff9800 !important;
+}
+
+[data-theme="dark"] .dialog-subtitle,
+[data-theme="dark"] .wizard-subtitle {
+  color: #9e9e9e !important;
+}
+
+/* Bodies */
+[data-theme="dark"] .dialog-body,
+[data-theme="dark"] .wizard-body,
+[data-theme="dark"] .wi-notes-body {
+  background: #1e1e1e !important;
+}
+
+/* Footers */
+[data-theme="dark"] .dialog-footer,
+[data-theme="dark"] .wizard-footer {
+  background: #121212 !important;
+  border-top-color: #424242 !important;
+}
+
+/* Buttons */
+[data-theme="dark"] .dialog-btn,
+[data-theme="dark"] .wizard-btn {
+  background: #2c2c2c !important;
+  color: #e0e0e0 !important;
+  border-color: #555 !important;
+}
+
+[data-theme="dark"] .back-btn,
+[data-theme="dark"] .next-btn,
+[data-theme="dark"] .finish-btn {
+  background: #2a1a08 !important;
+  color: #ff9800 !important;
+  border-color: #ff9800 !important;
+}
+
+[data-theme="dark"] .back-btn:hover,
+[data-theme="dark"] .next-btn:hover,
+[data-theme="dark"] .finish-btn:hover {
+  background: #ff9800 !important;
+  color: #ffffff !important;
+}
+
+/* WI Notes dialog specific */
+[data-theme="dark"] .wi-notes-header {
+  background: #2a1a08 !important;
+}
+
+[data-theme="dark"] .wi-notes-title {
+  color: #ff9800 !important;
+}
+
+[data-theme="dark"] .wi-notes-footer {
+  background: #121212 !important;
+}
+
+[data-theme="dark"] .btn-cancel {
+  color: #9e9e9e !important;
+  border-color: #555 !important;
+}
+
+[data-theme="dark"] .btn-cancel:hover {
+  background: #2c2c2c !important;
+}
+
+/* Confirmation dialog */
+[data-theme="dark"] .confirmation-body {
+  background: #1e1e1e !important;
+}
+
+[data-theme="dark"] .confirmation-message {
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .confirmation-footer {
+  background: #1e1e1e !important;
+}
+
+[data-theme="dark"] .confirmation-btn {
+  background: #2a1a08 !important;
+  color: #ff9800 !important;
+  border-color: #ff9800 !important;
+}
+
+[data-theme="dark"] .confirmation-btn:hover {
+  background: #ff9800 !important;
+  color: #ffffff !important;
+}
+
+/* Parts & lineup tables inside dialogs */
+[data-theme="dark"] .parts-table,
+[data-theme="dark"] .lineup-table {
+  border-color: #424242 !important;
+}
+
+[data-theme="dark"] .parts-table thead,
+[data-theme="dark"] .lineup-table thead {
+  background: #2a1a08 !important;
+}
+
+[data-theme="dark"] .parts-table th,
+[data-theme="dark"] .lineup-table th {
+  color: #ff9800 !important;
+  border-color: #424242 !important;
+}
+
+[data-theme="dark"] .parts-table td,
+[data-theme="dark"] .lineup-table td {
+  background: #1e1e1e !important;
+  color: #e0e0e0 !important;
+  border-color: #444 !important;
+}
+
+[data-theme="dark"] .parts-table tbody tr:hover,
+[data-theme="dark"] .lineup-table tbody tr:hover {
+  background: #2a2520 !important;
+}
+
+[data-theme="dark"] .cell-input {
+  color: #e0e0e0 !important;
+  background: transparent !important;
+}
+
+[data-theme="dark"] .cell-input:focus {
+  background: #2a1a08 !important;
+  box-shadow: inset 0 0 0 2px #ff9800 !important;
+}
+
+[data-theme="dark"] .add-row-btn {
+  color: #ff9800 !important;
+  border-color: #ff9800 !important;
+}
+
+[data-theme="dark"] .add-row-btn:hover {
+  background: #2a1a08 !important;
+}
+
+/* Wizard selects & radios */
+[data-theme="dark"] .wizard-select {
+  background-color: #2c2c2c !important;
+  border-color: #555 !important;
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .wizard-select:hover,
+[data-theme="dark"] .wizard-select:focus {
+  border-color: #ff9800 !important;
+}
+
+[data-theme="dark"] .radio-option {
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .cancel-btn {
+  color: #9e9e9e !important;
+  border-color: #555 !important;
+}
+
+/* Associated nodes textarea */
+[data-theme="dark"] .nodes-textarea {
+  background: #2c2c2c !important;
+  color: #e0e0e0 !important;
+  border-color: #555 !important;
+}
+
+[data-theme="dark"] .nodes-textarea:focus {
+  border-color: #ff9800 !important;
+  box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.15) !important;
+}
+
+/* Completion message */
+[data-theme="dark"] .completion-message {
+  color: #e0e0e0 !important;
+}
+
+/* ============================================================
+   DARK MODE — Export BOM Dialog (Export to Excel for SAP)
+   ============================================================ */
+
+[data-theme="dark"] .export-bom-dialog {
+  background: #1e1e1e !important;
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .export-bom-dialog h2[mat-dialog-title] {
+  color: #ff9800 !important;
+}
+
+[data-theme="dark"] .export-bom-dialog .section-label {
+  color: #ff9800 !important;
+}
+
+[data-theme="dark"] .export-bom-dialog .form-row label {
+  color: #9e9e9e !important;
+}
+
+[data-theme="dark"] .export-bom-dialog .form-row input {
+  background: #2c2c2c !important;
+  border-color: #555 !important;
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .export-bom-dialog .form-row input:focus {
+  border-color: #ff9800 !important;
+  outline: none !important;
+}
+
+[data-theme="dark"] .export-bom-dialog .tab-content,
+[data-theme="dark"] .export-bom-dialog .sap-scroll {
+  background: #1e1e1e !important;
+}
+
+[data-theme="dark"] .export-bom-dialog .dialog-actions {
+  background: #121212 !important;
+  border-top-color: #424242 !important;
+}
+

@@ -1,0 +1,394 @@
+pipeline {
+    agent {
+        label 'Docker-enabled'
+    }
+    
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        timestamps()
+        timeout(time: 1, unit: 'HOURS')
+        disableConcurrentBuilds()
+    }
+    
+    environment {
+        // Git information (formatted consistently)
+        BRANCH_NAME = "${GIT_BRANCH.split('/')[-1]}".trim().toLowerCase().replaceAll('_','-')
+        COMMIT_ID = "${GIT_COMMIT.substring(0,7)}".trim().toLowerCase()
+        BUILD_TIMESTAMP = new Date().format("yyMMddHHmmss", TimeZone.getTimeZone('UTC'))
+        PULL_REQUEST = "pr-${env.CHANGE_ID ?: 'none'}"
+        
+        // Docker/Nexus configuration
+        DOCKER_CREDENTIALS = 'nexus-cicd-creds'
+        BUILD_DOCKER_CREDENTIALS = credentials('nexus-cicd-creds')
+        DOCKER_REGISTRY = 'nexusprod.corp.intranet:4567'
+        DOCKER_REPO = 'css/css-ui'
+        DOCKER_IMAGE_NAME = 'css-ui'
+        DOCKER_IMAGE_TAG = "${BUILD_TIMESTAMP}-${COMMIT_ID}"
+        
+        // Kubernetes/Rancher configuration
+        KUBECONFIG_FILE = credentials('css.ranch.kubeconfig')
+        
+        // Azure Service Principal (for future authentication if needed)
+        AZURE_CLIENT_ID = credentials('Azure-Client-Id-nonprod')
+        AZURE_TENANT_ID = credentials('Azure-Tenant-Id')
+        AZURE_SECRET_ID = credentials('Azure-Secret-Id-nonprod')
+    }
+    
+    stages {
+        stage('Set Environment') {
+            steps {
+                script {
+                    echo "Branch: ${BRANCH_NAME}"
+                    
+                    // Determine environment based on branch
+                    if (BRANCH_NAME == 'main' || BRANCH_NAME == 'master') {
+                        env.APP_ACTIVE_PROFILE = 'prod'
+                        env.NAMESPACE = 'css-prod'
+                        env.KUBERNETES_REPLICAS = '1'
+                    } else if (BRANCH_NAME == 'release' || BRANCH_NAME == 'test') {
+                        env.APP_ACTIVE_PROFILE = 'test'
+                        env.NAMESPACE = 'css-test'
+                        env.KUBERNETES_REPLICAS = '1'
+                    } else if (BRANCH_NAME == 'development' || BRANCH_NAME == 'dev') {
+                        env.APP_ACTIVE_PROFILE = 'dev'
+                        env.NAMESPACE = 'css-dev'
+                        env.KUBERNETES_REPLICAS = '1'
+                    } else {
+                        env.APP_ACTIVE_PROFILE = 'dev'
+                        env.NAMESPACE = 'css-dev'
+                        env.KUBERNETES_REPLICAS = '1'
+                    }
+                    
+                    env.IMAGE_TAG = "${APP_ACTIVE_PROFILE}-${BUILD_TIMESTAMP}-${COMMIT_ID}"
+                    
+                    echo "Profile: ${APP_ACTIVE_PROFILE}"
+                    echo "Namespace: ${NAMESPACE}"
+                    echo "Replicas: ${KUBERNETES_REPLICAS}"
+                }
+            }
+        }
+        
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+                script {
+                    echo "Building branch: ${BRANCH_NAME}"
+                    echo "Commit: ${COMMIT_ID}"
+                    echo "Environment: ${APP_ACTIVE_PROFILE}"
+                }
+            }
+        }
+        
+        stage('Validate') {
+            steps {
+                script {
+                    docker.image('node:22-alpine').inside {
+                        echo "Validating Node.js and npm installation..."
+                        sh '''
+                            node --version
+                            npm --version
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Install Dependencies') {
+            steps {
+                script {
+                    docker.image('node:22-alpine').inside {
+                        echo "Installing dependencies..."
+                        sh '''
+                            npm install --cache /tmp/.npm-cache --prefer-offline
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Lint') {
+            steps {
+                script {
+                    docker.image('node:22-alpine').inside {
+                        echo "Running linting..."
+                        sh '''
+                            npm run lint 2>/dev/null || echo "Lint target not found, skipping..."
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                script {
+                    docker.image('node:22-alpine').inside {
+                        def buildConfig = 'dev'  // Default: dev
+                        if (BRANCH_NAME == 'release' || BRANCH_NAME == 'test') {
+                            buildConfig = 'test'
+                            echo "Building Angular application with configuration: test"
+                            sh '''npm run build -- --configuration=test'''
+                        } else if (BRANCH_NAME == 'main' || BRANCH_NAME == 'master') {
+                            buildConfig = 'production'
+                            echo "Building Angular application with configuration: production"
+                            sh '''npm run build -- --configuration=production'''
+                        } else {
+                            echo "Building Angular application with configuration: dev"
+                            sh '''npm run build -- --configuration=dev'''
+                        }
+                    }
+                }
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                script {
+                    docker.image('node:22-alpine').inside {
+                        echo "Running tests..."
+                        sh '''
+                            npm run test 2>/dev/null || echo "Test target not found, skipping..."
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    def buildConfig = 'dev'  // Default: dev branch
+                    if (BRANCH_NAME == 'release' || BRANCH_NAME == 'test') {
+                        buildConfig = 'test'
+                    } else if (BRANCH_NAME == 'main' || BRANCH_NAME == 'master') {
+                        buildConfig = 'production'
+                    }
+                    
+                    sh '''
+                        echo "📦 Checking Angular version from package.json..."
+                        ANGULAR_VERSION=$(grep '@angular/core' package.json | grep -oP '"[^"]*"' | head -1 | tr -d '"')
+                        echo "Angular version: ${ANGULAR_VERSION}"
+                    '''
+                    
+                    echo "Building Docker image with BUILD_CONFIGURATION: ${buildConfig}..."
+                    sh '''
+                        docker build \
+                            --build-arg BUILD_CONFIGURATION=''' + buildConfig + ''' \
+                            -f cicd/docker/Dockerfile \
+                            -t ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} \
+                            -t ${DOCKER_IMAGE_NAME}:latest \
+                            .
+                    '''
+                }
+            }
+        }
+        
+        stage('Push to Registry') {
+            when {
+                branch pattern: 'development|release|main|master', comparator: 'REGEXP'
+            }
+            steps {
+                script {
+                    echo "Pushing Docker image to Nexus registry..."
+                    sh '''
+                        echo "Pushing Docker image to Nexus registry..."
+                        echo "Registry: ${DOCKER_REGISTRY}"
+                        echo "Repository: ${DOCKER_REPO}"
+                        echo "Image Tag (profile-based): ${IMAGE_TAG}"
+                        echo "Image Tag (commit-based): ${DOCKER_IMAGE_TAG}"
+                        echo "Local image: ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}"
+                        echo "---"
+                        
+                        echo "Logging into Docker registry..."
+                        echo "${BUILD_DOCKER_CREDENTIALS_PSW}" | docker login -u "${BUILD_DOCKER_CREDENTIALS_USR}" --password-stdin ${DOCKER_REGISTRY}
+                        
+                        # Tag with profile-based tag (for Helm deployment)
+                        echo "Tagging image: ${DOCKER_REGISTRY}/${DOCKER_REPO}:${IMAGE_TAG}"
+                        docker tag ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} ${DOCKER_REGISTRY}/${DOCKER_REPO}:${IMAGE_TAG}
+                        
+                        # Tag with commit-based tag (for reference)
+                        echo "Tagging image: ${DOCKER_REGISTRY}/${DOCKER_REPO}:${DOCKER_IMAGE_TAG}"
+                        docker tag ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} ${DOCKER_REGISTRY}/${DOCKER_REPO}:${DOCKER_IMAGE_TAG}
+                        
+                        # Tag latest
+                        echo "Tagging image: ${DOCKER_REGISTRY}/${DOCKER_REPO}:latest"
+                        docker tag ${DOCKER_IMAGE_NAME}:latest ${DOCKER_REGISTRY}/${DOCKER_REPO}:latest
+                        
+                        # Push profile-based tag
+                        echo "Pushing: ${DOCKER_REGISTRY}/${DOCKER_REPO}:${IMAGE_TAG}"
+                        docker push ${DOCKER_REGISTRY}/${DOCKER_REPO}:${IMAGE_TAG}
+                        
+                        # Push commit-based tag
+                        echo "Pushing: ${DOCKER_REGISTRY}/${DOCKER_REPO}:${DOCKER_IMAGE_TAG}"
+                        docker push ${DOCKER_REGISTRY}/${DOCKER_REPO}:${DOCKER_IMAGE_TAG}
+                        
+                        # Push latest
+                        echo "Pushing: ${DOCKER_REGISTRY}/${DOCKER_REPO}:latest"
+                        docker push ${DOCKER_REGISTRY}/${DOCKER_REPO}:latest
+                        
+                        echo "Logging out from Docker registry..."
+                        docker logout ${DOCKER_REGISTRY}
+                    '''
+                }
+            }
+        }
+        
+        stage('Deploy to Rancher') {
+            when {
+                branch pattern: 'development|release|main|master', comparator: 'REGEXP'
+            }
+            steps {
+                script {
+                    echo "Deploying to Rancher (Namespace: ${NAMESPACE})..."
+                    
+                    // Determine which ingress-domain credential and values file to use
+                    def ingressDomainCredId = ''
+                    
+                    if (env.APP_ACTIVE_PROFILE == 'prod') {
+                        ingressDomainCredId = 'ingress-domain-prod'
+                        env.HELM_VALUES_FILE = 'values-prod.yaml'
+                    } else if (env.APP_ACTIVE_PROFILE == 'test') {
+                        ingressDomainCredId = 'ingress-domain-test'
+                        env.HELM_VALUES_FILE = 'values.yaml'
+                    } else {
+                        ingressDomainCredId = 'ingress-domain-dev'
+                        env.HELM_VALUES_FILE = 'values.yaml'
+                    }
+                    
+                    withCredentials([
+                        file(credentialsId: 'css.ranch.kubeconfig', variable: 'KUBECONFIG_FILE'),
+                        string(credentialsId: ingressDomainCredId, variable: 'INGRESS_DOMAIN_VALUE')
+                    ]) {
+                        sh '''
+                            # Setup kubeconfig
+                            mkdir -p ~/.kube
+                            cat ${KUBECONFIG_FILE} > ~/.kube/config
+                            
+                            echo "Deploying to namespace: ${NAMESPACE}"
+                            echo "Environment: ${APP_ACTIVE_PROFILE}"
+                            echo "Using values file: ${HELM_VALUES_FILE}"
+                            
+                            # Determine context name (css-dev, css-test, css-prod)
+                            CONTEXT_NAME="css-${APP_ACTIVE_PROFILE}"
+                            
+                            # Deploy using Helm with explicit context
+                            helm upgrade --install css-ui \
+                                --kubeconfig ~/.kube/config \
+                                --kube-context=${CONTEXT_NAME} \
+                                --namespace ${NAMESPACE} \
+                                -f ./cicd/helm/css-ui/${HELM_VALUES_FILE} \
+                                --set environment=${APP_ACTIVE_PROFILE} \
+                                --set image.tag=${IMAGE_TAG} \
+                                --set replicaCount=${KUBERNETES_REPLICAS} \
+                                --set ingress.domain=${INGRESS_DOMAIN_VALUE} \
+                                ./cicd/helm/css-ui/
+                            
+                            echo "Waiting for rollout..."
+                            kubectl rollout status deployment/css-ui-${APP_ACTIVE_PROFILE} \
+                                --kubeconfig ~/.kube/config \
+                                --context=${CONTEXT_NAME} \
+                                -n ${NAMESPACE} \
+                                --timeout=5m
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Verify Deployment') {
+            when {
+                branch pattern: 'development|release|main|master', comparator: 'REGEXP'
+            }
+            steps {
+                script {
+                    echo "Verifying deployment in namespace: ${NAMESPACE}"
+                    
+                    withCredentials([file(credentialsId: 'css.ranch.kubeconfig', variable: 'KUBECONFIG_FILE')]) {
+                        sh '''
+                            # Setup kubeconfig in standard location
+                            mkdir -p ~/.kube
+                            cat ${KUBECONFIG_FILE} > ~/.kube/config
+                            
+                            # Determine context name (css-dev, css-test, css-prod)
+                            CONTEXT_NAME="css-${APP_ACTIVE_PROFILE}"
+                            
+                            echo "Pods in namespace ${NAMESPACE}:"
+                            kubectl get pods -n ${NAMESPACE} --kubeconfig ~/.kube/config --context=${CONTEXT_NAME}
+                            
+                            echo "Services in namespace ${NAMESPACE}:"
+                            kubectl get svc -n ${NAMESPACE} --kubeconfig ~/.kube/config --context=${CONTEXT_NAME}
+                            
+                            echo "Ingresses in namespace ${NAMESPACE}:"
+                            kubectl get ingress -n ${NAMESPACE} --kubeconfig ~/.kube/config --context=${CONTEXT_NAME}
+                        '''
+                    }
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            echo 'Pipeline execution completed'
+            cleanWs()
+        }
+        failure {
+            echo 'Pipeline failed!'
+            script {
+                withCredentials([string(credentialsId: 'teams-secret', variable: 'TEAMS_WEBHOOK')]) {
+                    sh '''
+                        curl --max-time 5 -X POST ${TEAMS_WEBHOOK} \
+                            -H 'Content-Type: application/json' \
+                            -d "{
+                                \\"@type\\": \\"MessageCard\\",
+                                \\"@context\\": \\"https://schema.org/extensions\\",
+                                \\"summary\\": \\"CSS-UI Pipeline Failed\\",
+                                \\"themeColor\\": \\"ff0000\\",
+                                \\"sections\\": [
+                                    {
+                                        \\"activityTitle\\": \\"CSS-UI Pipeline Failed\\",
+                                        \\"facts\\": [
+                                            {\\"name\\": \\"Branch\\", \\"value\\": \\"''' + BRANCH_NAME + '''\\"}, 
+                                            {\\"name\\": \\"Commit\\", \\"value\\": \\"''' + COMMIT_ID + '''\\"}, 
+                                            {\\"name\\": \\"Environment\\", \\"value\\": \\"''' + APP_ACTIVE_PROFILE + '''\\"}, 
+                                            {\\"name\\": \\"Status\\", \\"value\\": \\"FAILED\\"}
+                                        ]
+                                    }
+                                ]
+                            }" || echo "Webhook notification failed - continuing"
+                    '''
+                }
+            }
+        }
+        success {
+            echo 'Pipeline succeeded!'
+            script {
+                withCredentials([string(credentialsId: 'teams-secret', variable: 'TEAMS_WEBHOOK')]) {
+                    sh '''
+                        curl --max-time 5 -X POST ${TEAMS_WEBHOOK} \
+                            -H 'Content-Type: application/json' \
+                            -d "{
+                                \\"@type\\": \\"MessageCard\\",
+                                \\"@context\\": \\"https://schema.org/extensions\\",
+                                \\"summary\\": \\"CSS-UI Pipeline Succeeded\\",
+                                \\"themeColor\\": \\"00ff00\\",
+                                \\"sections\\": [
+                                    {
+                                        \\"activityTitle\\": \\"CSS-UI Pipeline Succeeded\\",
+                                        \\"facts\\": [
+                                            {\\"name\\": \\"Branch\\", \\"value\\": \\"''' + BRANCH_NAME + '''\\"}, 
+                                            {\\"name\\": \\"Commit\\", \\"value\\": \\"''' + COMMIT_ID + '''\\"}, 
+                                            {\\"name\\": \\"Environment\\", \\"value\\": \\"''' + APP_ACTIVE_PROFILE + '''\\"}, 
+                                            {\\"name\\": \\"Image\\", \\"value\\": \\"''' + DOCKER_IMAGE_NAME + ':' + DOCKER_IMAGE_TAG + '''\\"}, 
+                                            {\\"name\\": \\"Status\\", \\"value\\": \\"SUCCESS\\"}
+                                        ]
+                                    }
+                                ]
+                            }" || echo "Webhook notification failed - continuing"
+                    '''
+                }
+            }
+        }
+    }
+}

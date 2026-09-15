@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: css-ui-config-dev
+  namespace: css-dev
+data:
+  # Development environment configuration
+  NODE_ENV: "development"
+  LOG_LEVEL: "debug"
+  API_ENDPOINT: "http://api.dev.local:3000"
+  AUTH_ENDPOINT: "http://auth.dev.local:3001"
+  ENVIRONMENT: "dev"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: css-ui-config-test
+  namespace: css-test
+data:
+  # Test environment configuration
+  NODE_ENV: "test"
+  LOG_LEVEL: "info"
+  API_ENDPOINT: "http://api.test.local:3000"
+  AUTH_ENDPOINT: "http://auth.test.local:3001"
+  ENVIRONMENT: "test"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: css-ui-config-prod
+  namespace: css-prod
+data:
+  # Production environment configuration
+  NODE_ENV: "production"
+  LOG_LEVEL: "warn"
+  API_ENDPOINT: "https://api.prod.local:3000"
+  AUTH_ENDPOINT: "https://auth.prod.local:3001"
+  ENVIRONMENT: "prod"

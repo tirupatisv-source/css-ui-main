@@ -1,0 +1,18 @@
+apiVersion: v2
+name: css-ui
+description: CSS-UI Angular application Helm chart for Rancher deployment
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - css-ui
+  - angular
+  - rancher
+  - kubernetes
+home: https://github.com/CSS/css-ui
+sources:
+  - https://github.com/CSS/css-ui
+maintainers:
+  - name: CSS Team
+    email: css@example.com
+

@@ -1,0 +1,425 @@
+/* Import theme variables */
+@use '../../shared/utilities/theme-variables' as theme;
+
+/* SAP Project Information two-column layout */
+.sap-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 32px;
+  width: 100%;
+  align-items: flex-start;
+}
+
+.sap-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+/* Local dialog shell */
+.export-bom-dialog {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+h2[mat-dialog-title] {
+  margin: 0 0 0.3rem 1rem;
+  color: theme.$color-dialog-title;
+  padding: 0;
+}
+
+.export-bom-dialog form {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* Important for flex-child scrolling */
+  overflow: hidden;
+}
+
+.full-width-tabs {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Fix Angular Material tab internals to fill available height */
+:host ::ng-deep {
+  /* Override Material Design CSS variables for orange tabs */
+  --mat-tab-active-label-text-color: theme.$color-primary !important;
+  --mat-tab-inactive-label-text-color: #6b7280 !important;
+  --mat-tab-focus-state-layer-color: theme.$color-primary !important;
+  --mdc-tab-indicator-color: theme.$color-primary !important;
+  --mat-tab-indicator-color: theme.$color-primary !important;
+
+  /* Tab labels styling - default inactive */
+  .mat-mdc-tab-label {
+    color: #6b7280 !important;
+
+    .mdc-tab__text-label {
+      color: #6b7280 !important;
+    }
+  }
+
+  /* Active tab label - multiple selectors for persistence */
+  .mat-mdc-tab-label[aria-selected="true"],
+  .mat-mdc-tab-label.mat-mdc-tab-label-active,
+  mat-mdc-tab.mdc-tab--active {
+    color: theme.$color-primary !important;
+    background-color: theme.$color-selected-bg !important;
+
+    .mdc-tab__text-label {
+      color: theme.$color-primary !important;
+    }
+  }
+
+  /* Active tab container background */
+  mat-mdc-tab[aria-selected="true"],
+  .mdc-tab--active {
+    background-color: theme.$color-selected-bg !important;
+  }
+
+  /* Tab role selector */
+  [role="tab"][aria-selected="true"] {
+    background-color: theme.$color-selected-bg !important;
+  }
+
+  /* Catch all active text label */
+  .mdc-tab--active .mdc-tab__text-label {
+    color: theme.$color-primary !important;
+  }
+
+  /* Hover state */
+  .mat-mdc-tab-label:hover:not(.mat-mdc-tab-label-disabled):not([aria-selected="true"]) {
+    .mdc-tab__text-label {
+      color: theme.$color-primary !important;
+    }
+  }
+
+  /* Focus state - active tab */
+  mat-mdc-tab.mdc-tab--active:focus .mdc-tab__text-label {
+    color: theme.$color-primary !important;
+  }
+
+  mat-mdc-tab.mdc-tab--active:hover .mdc-tab__text-label {
+    color: theme.$color-primary !important;
+  }
+
+  /* Tab indicator - show with orange color at BOTTOM - ONLY ON ACTIVE TAB */
+  .mdc-tab-indicator {
+    height: 4px !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    top: auto !important;
+  }
+
+  .mdc-tab--active .mdc-tab-indicator {
+    display: block !important;
+    height: 4px !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    top: auto !important;
+  }
+
+  /* Hide indicator for inactive tabs */
+  .mdc-tab:not(.mdc-tab--active) .mdc-tab-indicator {
+    display: none !important;
+  }
+
+  /* Active tab thick bottom line */
+  .mdc-tab-indicator::before,
+  .mdc-tab-indicator::after {
+    display: none !important;
+  }
+
+  /* Only show orange content for active tab indicator */
+  .mdc-tab--active .mdc-tab-indicator__content {
+    display: block !important;
+    height: 4px !important;
+    background-color: #ff9800 !important;
+    border: none !important;
+    width: 100% !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    top: auto !important;
+  }
+
+  /* Hide indicator content for inactive tabs */
+  .mdc-tab:not(.mdc-tab--active) .mdc-tab-indicator__content {
+    display: none !important;
+  }
+
+  /* Tab indicator underline - orange - ONLY ACTIVE */
+  .mdc-tab--active .mdc-tab-indicator__content--underline {
+    display: block !important;
+    height: 4px !important;
+    background-color: #ff9800 !important;
+    border-bottom: 4px solid #ff9800 !important;
+    width: 100% !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    top: auto !important;
+  }
+
+  /* Hide underline for inactive tabs */
+  .mdc-tab:not(.mdc-tab--active) .mdc-tab-indicator__content--underline {
+    display: none !important;
+  }
+
+  /* Active tab bottom border styling */
+  .mat-mdc-tab-label.mat-mdc-tab-label-active {
+    position: relative;
+  }
+
+  .mat-mdc-tab-label[aria-selected="true"] {
+    position: relative;
+  }
+
+  /* MDC active tab indicator */
+  .mdc-tab--active .mdc-tab-indicator__content--underline {
+    display: none !important;
+  }
+
+  .mat-mdc-tab-group.full-width-tabs {
+    height: 100%;
+  }
+
+  .full-width-tabs .mat-mdc-tab-body-wrapper {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: auto !important;
+  }
+
+  .mat-mdc-tab-body.mat-mdc-tab-body-active {
+    position: relative;
+    height: 100%;
+    display: flex !important;
+    flex-direction: column;
+    overflow: auto !important;
+  }
+
+  .mat-mdc-tab-body-content {
+    height: 100% !important;
+    overflow: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  /* Light mode tabs - add orange bottom border */
+  :not([data-theme="dark"]) {
+    .mdc-tab-indicator {
+      background: #ff9800 !important;
+    }
+  }
+}
+
+.tab-content, .sap-scroll {
+  padding: 16px 24px;
+  width: 100%;
+  flex: 1 1 auto;
+  overflow-x: hidden !important;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.sap-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.section-label {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 20px 0 12px;
+  color: theme.$color-primary;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 0;
+  min-width: 0;
+}
+
+.form-row label {
+  min-width: auto;
+  flex-shrink: 0;
+  font-weight: 500;
+  color: #333;
+  font-size: 0.875rem;
+}
+
+.form-row input,
+.form-row mat-select {
+  flex: 1;
+  max-width: 100%;
+  min-width: 100%;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background: #fafbfc;
+  box-sizing: border-box;
+  font-size: 0.875rem;
+}
+
+.form-row input:focus, 
+.form-row mat-select:focus {
+  border-color: theme.$color-primary;
+  outline: none;
+}
+
+.lookup-row {
+  grid-column: 2;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  padding: 16px 24px;
+  flex: 0 0 auto;
+  border-top: 1px solid #eee;
+}
+
+/* ====================================================
+   DARK MODE — Export BOM Dialog
+   ==================================================== */
+
+:host-context([data-theme="dark"]) {
+  .export-bom-dialog {
+    background: #1e1e1e !important;
+    color: #e0e0e0 !important;
+  }
+
+  h2[mat-dialog-title] {
+    color: #ff9800 !important;
+  }
+
+  /* Tab header bar */
+  ::ng-deep .mat-mdc-tab-labels {
+    background: #1e1e1e !important;
+    border-bottom-color: #424242 !important;
+  }
+
+  ::ng-deep .mat-mdc-tab-label .mdc-tab__text-label,
+  ::ng-deep .mdc-tab__text-label {
+    color: #9e9e9e !important;
+  }
+
+  ::ng-deep .mat-mdc-tab-label[aria-selected="true"] .mdc-tab__text-label,
+  ::ng-deep .mdc-tab--active .mdc-tab__text-label {
+    color: #ff9800 !important;
+  }
+
+  ::ng-deep .mat-mdc-tab-label[aria-selected="true"],
+  ::ng-deep .mdc-tab--active {
+    background-color: #2a2520 !important;
+  }
+
+  ::ng-deep [role="tab"][aria-selected="true"] {
+    background-color: #2a2520 !important;
+  }
+
+  /* Tab indicator - orange bottom border for dark mode - ONLY ACTIVE TAB */
+  ::ng-deep .mdc-tab-indicator {
+    height: 4px !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    top: auto !important;
+  }
+
+  ::ng-deep .mdc-tab--active .mdc-tab-indicator {
+    display: block !important;
+    height: 4px !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    top: auto !important;
+  }
+
+  /* Hide indicator for inactive tabs */
+  ::ng-deep .mdc-tab:not(.mdc-tab--active) .mdc-tab-indicator {
+    display: none !important;
+  }
+
+  /* Only show orange content for active tab indicator in dark mode */
+  ::ng-deep .mdc-tab--active .mdc-tab-indicator__content {
+    display: block !important;
+    height: 4px !important;
+    background-color: #ff9800 !important;
+    border: none !important;
+    width: 100% !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    top: auto !important;
+  }
+
+  /* Hide indicator content for inactive tabs */
+  ::ng-deep .mdc-tab:not(.mdc-tab--active) .mdc-tab-indicator__content {
+    display: none !important;
+  }
+
+  ::ng-deep .mdc-tab-indicator__content--underline {
+    display: none !important;
+  }
+
+  ::ng-deep .mdc-tab--active .mdc-tab-indicator__content--underline {
+    display: block !important;
+    height: 4px !important;
+    background-color: #ff9800 !important;
+    border-bottom: 4px solid #ff9800 !important;
+    width: 100% !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    top: auto !important;
+  }
+
+  /* Tab body wrapper */
+  ::ng-deep .mat-mdc-tab-body-wrapper {
+    background: #1e1e1e !important;
+  }
+
+  .tab-content,
+  .sap-scroll {
+    background: #1e1e1e !important;
+    color: #e0e0e0 !important;
+  }
+
+  .section-label {
+    color: #ff9800 !important;
+  }
+
+  .form-row label {
+    color: #9e9e9e !important;
+  }
+
+  .form-row input,
+  .form-row mat-select {
+    background: #2c2c2c !important;
+    border-color: #555 !important;
+    color: #e0e0e0 !important;
+  }
+
+  .form-row input:focus {
+    border-color: #ff9800 !important;
+    outline: none !important;
+  }
+
+  .dialog-actions {
+    background: #121212 !important;
+    border-top-color: #424242 !important;
+  }
+}

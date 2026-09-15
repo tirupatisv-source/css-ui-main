@@ -1,0 +1,52 @@
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+
+# Production
+build/
+dist/
+
+# Misc
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Testing
+coverage/
+.nyc_output/
+
+# IDE
+*.iml
+.classpath
+.project
+.settings/
+bin/
+
+# Cache
+.cache/
+.eslintcache
+.angular/
+
+# Local Development Configuration
+src/environments/environment.ts
+
+# Markdown files (keep only README.md)
+CLEANUP_*.md
+README_LOCAL.md
+NGINX_OPTION2_DEPLOYMENT.md
+*.md

@@ -1,0 +1,96 @@
+# Multi-stage Dockerfile for CSS UI with Nginx Reverse Proxy
+# Stage 1: Build Angular application
+# Stage 2: Runtime with Nginx serving Angular + proxying to Spring Boot
+
+# Build arguments
+ARG REGISTRY_URL=nexusprod.corp.intranet:4567
+ARG BUILD_PROFILE=dev
+ARG NODEJS_VERSION=20
+
+# ============================================================
+# Stage 1: Angular Build
+# ============================================================
+FROM node:${NODEJS_VERSION}-alpine AS builder
+
+ARG BUILD_PROFILE=dev
+
+WORKDIR /build
+
+# Copy package files
+COPY package.json package-lock.json ./
+
+# Install dependencies with npm ci (cleaner than npm install in CI)
+RUN npm ci --prefer-offline --no-audit
+
+# Copy source code
+COPY . .
+
+# Build Angular application with environment-specific configuration
+# dev, test, prod configurations mapped via angular.json fileReplacements
+RUN echo "========== Building CSS-UI ==========" && \
+    echo "BUILD_PROFILE: ${BUILD_PROFILE}" && \
+    npm run build -- --configuration=${BUILD_PROFILE} && \
+    echo "✅ Build completed for profile: ${BUILD_PROFILE}"
+
+# Verify build output
+RUN ls -la dist/css/browser/ && \
+    echo "Build artifacts verified!"
+
+# ============================================================
+# Stage 2: Runtime with Nginx
+# ============================================================
+FROM nginx:1.25-alpine
+
+ARG BUILD_PROFILE=dev
+
+# Install curl for health checks
+RUN apk add --no-cache curl
+
+# Set environment variable for reference
+ENV BUILD_PROFILE=${BUILD_PROFILE}
+ENV NGINX_WORKER_PROCESSES=auto
+
+# Create nginx user if needed
+RUN addgroup -g 101 -S nginx || true && \
+    adduser -S -D -H -u 101 -h /var/cache/nginx -s /sbin/nologin -G nginx -g nginx nginx || true
+
+# Copy Angular build output to Nginx
+# Preserve directory structure including assets/ subfolder
+COPY --from=builder --chown=nginx:nginx /build/dist/css/browser/ /usr/share/nginx/html/
+
+# Copy Nginx configuration
+COPY --chown=nginx:nginx nginx.conf /etc/nginx/nginx.conf
+
+# Create log directory
+RUN mkdir -p /var/log/nginx && \
+    chown -R nginx:nginx /var/log/nginx
+
+# Create startup script with environment variable substitution
+RUN echo '#!/bin/sh' > /docker-entrypoint.sh && \
+    echo 'set -e' >> /docker-entrypoint.sh && \
+    echo '' >> /docker-entrypoint.sh && \
+    echo '# Substitute environment variables in nginx.conf' >> /docker-entrypoint.sh && \
+    echo 'envsubst '\''$NGINX_WORKER_PROCESSES'\'' < /etc/nginx/nginx.conf > /etc/nginx/nginx.conf.tmp' >> /docker-entrypoint.sh && \
+    echo 'mv /etc/nginx/nginx.conf.tmp /etc/nginx/nginx.conf' >> /docker-entrypoint.sh && \
+    echo '' >> /docker-entrypoint.sh && \
+    echo 'echo "========== Nginx Configuration ==========="' >> /docker-entrypoint.sh && \
+    echo 'echo "Profile: ${BUILD_PROFILE}"' >> /docker-entrypoint.sh && \
+    echo 'echo "Worker Processes: ${NGINX_WORKER_PROCESSES}"' >> /docker-entrypoint.sh && \
+    echo 'echo "=========================================="' >> /docker-entrypoint.sh && \
+    echo '' >> /docker-entrypoint.sh && \
+    echo 'exec "$@"' >> /docker-entrypoint.sh && \
+    chmod +x /docker-entrypoint.sh
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost/health || exit 1
+
+# Expose port
+EXPOSE 80
+
+# Switch to non-root user for security
+USER nginx
+
+# Entrypoint and command
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["nginx", "-g", "daemon off;"]

@@ -1,0 +1,33 @@
+{{- if .Values.ingress.enabled }}
+{{- $fullName := include "css-ui.fullname" . -}}
+{{- $environment := .Values.environment -}}
+{{- $domain := .Values.domain -}}
+{{- $svcPort := .Values.service.port -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "css-ui.labels" . | nindent 4 }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  ingressClassName: {{ .Values.ingress.ingressClass }}
+  rules:
+  {{- range .Values.ingress.hosts }}
+    - host: {{ .hostName }}-{{ $environment }}.{{ $domain }}
+      http:
+        paths:
+        {{- range .paths }}
+        - path: {{ . }}
+          pathType: Prefix
+          backend:
+            service:
+              name: {{ include "css-ui.fullname" $ }}
+              port:
+                number: {{ $svcPort }}
+        {{- end }}
+  {{- end }}
+{{- end }}

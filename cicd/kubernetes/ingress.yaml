@@ -1,0 +1,134 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: css-ui-ingress
+  namespace: css-dev
+  labels:
+    app: css-ui
+    environment: dev
+  annotations:
+    kubernetes.io/ingress.class: "rancher"
+    # SSL/TLS Configuration
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-protocols: "TLSv1.2 TLSv1.3"
+    # SPA routing for Angular
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/try-files: $uri $uri/ /index.html
+    # Security headers
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Frame-Options: SAMEORIGIN";
+      more_set_headers "X-Content-Type-Options: nosniff";
+      more_set_headers "X-XSS-Protection: 1; mode=block";
+      more_set_headers "Referrer-Policy: strict-origin-when-cross-origin";
+    # CORS - Allow CSS-Services backend and other UI instances
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://css-ui-dev.rke-odc-test.corp.intranet, https://css-ui-test.rke-odc-test.corp.intranet, https://css-ui.rke-odc-prod.corp.intranet"
+    # TLS certificate
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - css-ui-dev.rke-odc-test.corp.intranet
+    secretName: css-ui-dev-tls
+  rules:
+  - host: css-ui-dev.rke-odc-test.corp.intranet
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: css-ui
+            port:
+              number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: css-ui-ingress
+  namespace: css-test
+  labels:
+    app: css-ui
+    environment: test
+  annotations:
+    kubernetes.io/ingress.class: "rancher"
+    # SSL/TLS Configuration
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-protocols: "TLSv1.2 TLSv1.3"
+    # SPA routing for Angular
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/try-files: $uri $uri/ /index.html
+    # Security headers
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Frame-Options: SAMEORIGIN";
+      more_set_headers "X-Content-Type-Options: nosniff";
+      more_set_headers "X-XSS-Protection: 1; mode=block";
+      more_set_headers "Referrer-Policy: strict-origin-when-cross-origin";
+    # CORS - Allow CSS-Services backend and other UI instances
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://css-ui-dev.rke-odc-test.corp.intranet, https://css-ui-test.rke-odc-test.corp.intranet, https://css-ui.rke-odc-prod.corp.intranet"
+    # TLS certificate
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - css-ui-test.rke-odc-test.corp.intranet
+    secretName: css-ui-test-tls
+  rules:
+  - host: css-ui-test.rke-odc-test.corp.intranet
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: css-ui
+            port:
+              number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: css-ui-ingress
+  namespace: css-prod
+  labels:
+    app: css-ui
+    environment: prod
+  annotations:
+    kubernetes.io/ingress.class: "rancher"
+    # SSL/TLS Configuration
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-protocols: "TLSv1.2 TLSv1.3"
+    # SPA routing for Angular
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/try-files: $uri $uri/ /index.html
+    # Security headers
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Frame-Options: SAMEORIGIN";
+      more_set_headers "X-Content-Type-Options: nosniff";
+      more_set_headers "X-XSS-Protection: 1; mode=block";
+      more_set_headers "Referrer-Policy: strict-origin-when-cross-origin";
+    # CORS - Allow CSS-Services backend
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://css-ui-prod.rke-odc-prod.corp.intranet"
+    # TLS certificate
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - css-ui-prod.rke-odc-prod.corp.intranet
+    secretName: css-ui-prod-tls
+  rules:
+  - host: css-ui-prod.rke-odc-prod.corp.intranet
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: css-ui
+            port:
+              number: 80

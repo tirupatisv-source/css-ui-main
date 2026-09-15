@@ -1,0 +1,376 @@
+/**
+ * Global Theme Variables (SCSS)
+ * Import this file in styles.scss for centralized color management
+ * Usage: @import 'shared/utilities/theme-variables';
+ */
+
+// ============================================================
+// COLOR PALETTE
+// ============================================================
+
+// Primary Orange - Used for borders, labels, primary actions
+$color-primary: #ff9800;
+$color-primary-dark: #fb8500;
+$color-primary-light: rgba(255, 152, 0, 0.4);
+$color-primary-base: rgba(255, 152, 0, 1);
+
+// Dialog Title Brown
+$color-dialog-title: #8a4d00;
+
+// Secondary Blue - Used for warn/secondary buttons
+$color-secondary: #ff9800;
+$color-secondary-dark: #0d47a1;
+$color-secondary-hover: #1565c0;
+
+// Neutral Colors
+$color-white: #ffffff;
+$color-light-gray: #f5f5f5;
+$color-border-gray: #e0e0e0;
+$color-dark-gray: rgba(0, 0, 0, 0.6);
+
+// Status Colors
+$color-error: #b00020;
+$color-success: #4caf50;
+$color-warning: #ff9800;
+$color-info: #2196f3;
+
+// Selection & Hover
+$color-selected-bg: #f1ece5; // Light peach for selected rows
+
+// ============================================================
+// TYPOGRAPHY
+// ============================================================
+
+$font-family-base: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+$font-size-base: 14px;
+$font-size-small: 12px;
+$font-size-large: 16px;
+$font-size-title: 20px;
+$font-size-dialog-title: 20px;
+
+// ============================================================
+// SPACING
+// ============================================================
+
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+
+// ============================================================
+// BORDER RADIUS
+// ============================================================
+
+$border-radius-sm: 2px;
+$border-radius-md: 4px;
+$border-radius-lg: 8px;
+
+// ============================================================
+// SHADOWS
+// ============================================================
+
+$shadow-light: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+$shadow-medium: 0 3px 6px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.12);
+$shadow-heavy: 0 10px 20px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.10);
+
+// ============================================================
+// TRANSITIONS
+// ============================================================
+
+$transition-fast: 150ms ease-out;
+$transition-base: 300ms ease-out;
+$transition-slow: 500ms ease-out;
+
+// ============================================================
+// Z-INDEX SCALE
+// ============================================================
+
+$z-index-dropdown: 1000;
+$z-index-sticky: 1020;
+$z-index-fixed: 1030;
+$z-index-modal-backdrop: 1040;
+$z-index-modal: 1050;
+$z-index-popover: 1060;
+$z-index-tooltip: 1070;
+
+// ============================================================
+// MIXINS
+// ============================================================
+
+// Flex center
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// Flex between
+@mixin flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+// Text truncate
+@mixin text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Multiline text truncate
+@mixin text-truncate-lines($lines: 2) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// Clearfix
+@mixin clearfix {
+  &::after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+
+// Focus styles
+@mixin focus-outline {
+  outline: 2px solid $color-primary;
+  outline-offset: 2px;
+}
+
+// Hover effect
+@mixin hover-effect {
+  transition: background-color $transition-base, color $transition-base;
+
+  &:hover {
+    background-color: rgba($color-primary, 0.08);
+  }
+}
+
+// Disabled styles
+@mixin disabled-styles {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+// ============================================================
+// LAYOUT UTILITIES
+// ============================================================
+
+// Full width and height
+@mixin full-size {
+  width: 100%;
+  height: 100%;
+}
+
+// Container padding
+@mixin container-padding {
+  padding: $spacing-md;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+// Responsive grid
+@mixin responsive-grid($columns: 2, $gap: $spacing-md) {
+  display: grid;
+  grid-template-columns: repeat($columns, 1fr);
+  gap: $gap;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ============================================================
+// COMPONENT SPECIFIC
+// ============================================================
+
+// Dialog title styles
+@mixin dialog-title-styles {
+  color: $color-dialog-title;
+  font-weight: 600;
+  font-size: $font-size-dialog-title;
+}
+
+// Form label styles
+@mixin form-label-styles {
+  color: $color-primary;
+  font-weight: 500;
+}
+
+// Form field border
+@mixin form-field-border {
+  border-color: $color-primary !important;
+
+  &:focus,
+  &.mat-focused {
+    border-color: $color-primary-dark !important;
+    border-width: 2px !important;
+  }
+}
+
+// Button styles
+@mixin primary-button {
+  background-color: $color-primary;
+  color: $color-white;
+
+  &:hover {
+    background-color: $color-primary-dark;
+  }
+}
+
+@mixin secondary-button {
+  background-color: $color-secondary;
+  color: $color-white;
+
+  &:hover {
+    background-color: $color-secondary-hover;
+  }
+}
+
+// Search field styles
+@mixin search-field-styles {
+  border-color: $color-primary !important;
+
+  .mat-icon {
+    color: $color-primary !important;
+  }
+
+  &:focus,
+  &.mat-focused {
+    border-color: $color-primary-dark !important;
+  }
+}
+
+// Table row selection
+@mixin table-selected-row {
+  background-color: $color-selected-bg;
+  border-color: $color-selected-bg;
+}
+
+// ============================================================
+// ANIMATION KEYFRAMES
+// ============================================================
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// ============================================================
+// THEME CSS CUSTOM PROPERTIES (Light & Dark Mode)
+// Applied via [data-theme="light"] / [data-theme="dark"] on <html>
+// ============================================================
+
+:root,
+[data-theme="light"] {
+  // Backgrounds
+  --color-bg-page:        #f5f5f5;
+  --color-bg-surface:     #ffffff;
+  --color-bg-header:      #f6ece4;
+  --color-bg-header-wrap: #f9e4d2;
+  --color-bg-toolbar:     #f6ece4;
+  --color-bg-input:       #ffffff;
+  --color-bg-row-hover:   #f1ece5;
+  --color-bg-row-selected:#fde8cc;
+  --color-bg-sidenav:     #ffffff;
+  --color-bg-card:        #ffffff;
+
+  // Text
+  --color-text-primary:   #212121;
+  --color-text-secondary: rgba(0, 0, 0, 0.6);
+  --color-text-hint:      rgba(0, 0, 0, 0.38);
+  --color-text-on-primary:#ffffff;
+  --color-text-title:     #8a4d00;
+  --color-text-link:      #005a8c;
+
+  // Borders & Dividers
+  --color-border:         #e0e0e0;
+  --color-divider:        rgba(0, 0, 0, 0.12);
+
+  // Brand accent (orange stays the same in both themes)
+  --color-accent:         #ff9800;
+  --color-accent-dark:    #ed6c02;
+
+  // Shadows
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+
+  // Theme toggle icon helper
+  --theme-icon: "dark_mode";
+}
+
+[data-theme="dark"] {
+  // Backgrounds
+  --color-bg-page:        #121212;
+  --color-bg-surface:     #1e1e1e;
+  --color-bg-header:      #1a1210;
+  --color-bg-header-wrap: #1a1210;
+  --color-bg-toolbar:     #1a1210;
+  --color-bg-input:       #2c2c2c;
+  --color-bg-row-hover:   #2a2520;
+  --color-bg-row-selected:#3d2a10;
+  --color-bg-sidenav:     #1e1e1e;
+  --color-bg-card:        #2c2c2c;
+
+  // Text
+  --color-text-primary:   #e0e0e0;
+  --color-text-secondary: rgba(255, 255, 255, 0.7);
+  --color-text-hint:      rgba(255, 255, 255, 0.38);
+  --color-text-on-primary:#ffffff;
+  --color-text-title:     #ffb74d;
+  --color-text-link:      #64b5f6;
+
+  // Borders & Dividers
+  --color-border:         #424242;
+  --color-divider:        rgba(255, 255, 255, 0.12);
+
+  // Brand accent
+  --color-accent:         #ff9800;
+  --color-accent-dark:    #ed6c02;
+
+  // Shadows
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.5), 0 1px 2px rgba(0,0,0,0.6);
+
+  // Theme toggle icon helper
+  --theme-icon: "light_mode";
+}

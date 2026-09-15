@@ -1,0 +1,119 @@
+<div class="export-bom-dialog">
+  <h2 mat-dialog-title>Export to Excel for SAP</h2>
+  <form [formGroup]="form">
+    <mat-tab-group [(selectedIndex)]="tabIndex" class="full-width-tabs" [dynamicHeight]="false">
+      <!-- Left Tab: Purchase Information -->
+      <mat-tab label="Purchase Information">
+        <!-- <div class="section-label">Purchase Requisition Header Information</div> -->
+        <div class="tab-content">
+          <div class="section-label">Purchase Requisition Header Information</div>
+          <div [formGroup]="form" class="sap-grid">
+            <div class="form-row"><label for="projectNumber">Project Number:</label><input id="projectNumber" matInput
+                formControlName="projectNumber" /></div>
+            <div class="form-row"><label for="netBuildId">Net Build ID:</label><input id="netBuildId" matInput
+                formControlName="netBuildId" /></div>
+            <div class="form-row"><label for="originator">Originator:</label><input id="originator" matInput
+                formControlName="originator" /></div>
+            <div class="form-row"><label for="dateRequired">Date Required:</label><input id="dateRequired" matInput
+                type="date" formControlName="dateRequired" /></div>
+          </div>
+          <br>
+          <div class="section-label">Shipping Information</div>
+          <div [formGroup]="shippingGroup" class="sap-grid">
+            <div class="form-row"><label for="shipping-addressId">Address ID:</label><input id="shipping-addressId"
+                matInput formControlName="addressId" /></div>
+            <div class="form-row"><label for="shipping-siteName">Site Name:</label><input id="shipping-siteName"
+                matInput formControlName="siteName" /></div>
+            <div class="form-row"><label for="shipping-address">Address:</label><input id="shipping-address" matInput
+                formControlName="address" /></div>
+            <div class="form-row"><label for="shipping-city">City:</label><input id="shipping-city" matInput
+                formControlName="city" /></div>
+            <div class="form-row"><label for="shipping-state">State/Prov:</label><input id="shipping-state" matInput
+                formControlName="state" /></div>
+            <div class="form-row"><label for="shipping-plant">Plant:</label><input id="shipping-plant" matInput
+                formControlName="plant" /></div>
+            <div class="form-row"><label for="shipping-zip">Zip:</label><input id="shipping-zip" matInput
+                formControlName="zip" /></div>
+            <div class="form-row lookup-row" style="grid-column: 2;">
+              <button mat-stroked-button class="lookup-btn" (click)="openShippingAddressLookup()">Address Lookup</button>
+            </div>
+          </div>
+
+          <div class="section-label">Install Information</div>
+          <div [formGroup]="installGroup" class="sap-grid">
+            <div class="form-row"><label for="install-addressId">Address ID:</label><input id="install-addressId"
+                matInput formControlName="addressId" /></div>
+            <div class="form-row"><label for="install-siteName">Site Name:</label><input id="install-siteName" matInput
+                formControlName="siteName" /></div>
+            <div class="form-row"><label for="install-address">Address:</label><input id="install-address" matInput
+                formControlName="address" /></div>
+            <div class="form-row"><label for="install-city">City:</label><input id="install-city" matInput
+                formControlName="city" /></div>
+            <div class="form-row"><label for="install-state">State/Prov:</label><input id="install-state" matInput
+                formControlName="state" /></div>
+            <div class="form-row"><label for="install-zip">Zip:</label><input id="install-zip" matInput
+                formControlName="zip" /></div>
+            <div class="form-row lookup-row" style="grid-column: 2;">
+              <button mat-stroked-button class="lookup-btn" (click)="openInstallAddressLookup()">Address Lookup</button>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+      <!-- Right Tab: SAP Project Information -->
+      <mat-tab label="SAP Project Information">
+        <div class="tab-content sap-scroll" [formGroup]="sapGroup">
+          <div class="sap-two-col">
+            <div class="sap-col">
+              <div class="form-row"><label for="sap-purchaseReqDocType">Purchase Requisition Document
+                  Type:</label><input id="sap-purchaseReqDocType" matInput formControlName="purchaseReqDocType" /></div>
+              <div class="form-row"><label for="sap-purchasingGroup">Purchasing Group:</label><input
+                  id="sap-purchasingGroup" matInput formControlName="purchasingGroup" /></div>
+              <div class="form-row"><label for="sap-costElement">Cost Element:</label><input id="sap-costElement"
+                  matInput formControlName="costElement" /></div>
+              <div class="form-row"><label for="sap-itemCategory">Item Category in Purchasing Document:</label><input
+                  id="sap-itemCategory" matInput formControlName="itemCategory" /></div>
+              <div class="form-row"><label for="sap-accountAssignmentCategory">Account Assignment
+                  Category:</label><input id="sap-accountAssignmentCategory" matInput
+                  formControlName="accountAssignmentCategory" /></div>
+              <div class="form-row"><label for="sap-mainAssistNumber">Main Assest Number:</label><input
+                  id="sap-mainAssistNumber" matInput formControlName="mainAssistNumber" /></div>
+              <div class="form-row"><label for="sap-requestingOrg">Requesting ORG:</label><input id="sap-requestingOrg"
+                  matInput formControlName="requestingOrg" /></div>
+              <div class="form-row"><label for="sap-costCenter">Cost Center:</label><input id="sap-costCenter" matInput
+                  formControlName="costCenter" /></div>
+              <div class="form-row"><label for="sap-eidCode">EID Code:</label><input id="sap-eidCode" matInput
+                  formControlName="eidCode" /></div>
+              <div class="form-row"><label for="sap-price">Price:</label><input id="sap-price" matInput
+                  formControlName="price" /></div>
+            </div>
+            <div class="sap-col">
+              <div class="form-row"><label for="sap-purchasingDocCategory">Purchasing Doc Category:</label><input
+                  id="sap-purchasingDocCategory" matInput formControlName="purchasingDocCategory" /></div>
+              <div class="form-row"><label for="sap-deletionIndicator">Deletion Indicator in Purchasing
+                  Document:</label><input id="sap-deletionIndicator" matInput formControlName="deletionIndicator" />
+              </div>
+              <div class="form-row"><label for="sap-wbsNumber">WBS Number:</label><input id="sap-wbsNumber" matInput
+                  formControlName="wbsNumber" /></div>
+              <div class="form-row"><label for="sap-company">Company:</label><mat-select id="sap-company"
+                  formControlName="company"><mat-option value="">Select</mat-option></mat-select></div>
+              <div class="form-row"><label for="sap-unloadingPoint">Unloading Point:</label><input
+                  id="sap-unloadingPoint" matInput formControlName="unloadingPoint" /></div>
+              <div class="form-row"><label for="sap-orderNumber">Order Number:</label><input id="sap-orderNumber"
+                  matInput formControlName="orderNumber" /></div>
+              <div class="form-row"><label for="sap-purchasingOrg">Purchasing Organization:</label><input
+                  id="sap-purchasingOrg" matInput formControlName="purchasingOrg" /></div>
+              <div class="form-row"><label for="sap-fixedVendor">Fixed Vendor:</label><input id="sap-fixedVendor"
+                  matInput formControlName="fixedVendor" /></div>
+              <div class="form-row"><label for="sap-lastBid">Item Text:</label><input id="sap-lastBid" matInput
+                  formControlName="lastBid" /></div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+    <div class="dialog-actions">
+      <button mat-raised-button color="primary" (click)="exportExcel()">Export to Excel</button>
+      <button mat-raised-button color="warn" (click)="close()">Close</button>
+    </div>
+  </form>
+</div>

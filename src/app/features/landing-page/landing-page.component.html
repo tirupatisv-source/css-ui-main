@@ -1,0 +1,236 @@
+<div class="landing-header" (click)="closeLandingDialogs()">
+  <div class="header-navigation">
+    <button class="nav-item" (click)="newProject($event)" matTooltip="Create a new project">
+      <mat-icon>note_add</mat-icon>
+      <span>New</span>
+    </button>
+
+    <button class="nav-item" (click)="openProject($event)" matTooltip="Open an existing project">
+      <mat-icon>folder_open</mat-icon>
+      <span>Open</span>
+    </button>
+
+    <button class="nav-item" (click)="copyProject($event)" matTooltip="Copy a project">
+      <mat-icon>file_copy</mat-icon>
+      <span>Copy</span>
+    </button>
+
+    <button class="nav-item" (click)="deleteProject($event)" matTooltip="Delete a project">
+      <mat-icon>delete_forever</mat-icon>
+      <span>Delete</span>
+    </button>
+
+    <div class="vertical-divider" *ngIf="projectOpened"></div>
+
+    <button *ngIf="projectOpened" class="nav-item" (click)="showWorkItems()" [disabled]="!workItemsEnabled" matTooltip="Open work items">
+      <mat-icon>list_alt</mat-icon>
+      <span>Work Items</span>
+    </button>
+
+    <button *ngIf="projectOpened" class="nav-item" (click)="showReports()">
+      <mat-icon>assessment</mat-icon>
+      <span>Reports</span>
+    </button>
+
+    <button *ngIf="projectOpened" class="nav-item" (click)="downloadRunList()" [disabled]="!workItemsEnabled" matTooltip="Download Run List">
+      <mat-icon>playlist_add_check</mat-icon>
+      <span>Run List</span>
+    </button>
+
+    
+
+    <button *ngIf="projectOpened" class="nav-item" (click)="showNotes(); $event.stopPropagation()" matTooltip="Download General Notes">
+      <mat-icon>notes</mat-icon>
+      <span>Notes</span>
+    </button>
+
+    <button *ngIf="projectOpened" class="nav-item" [matMenuTriggerFor]="editMenu">
+      <mat-icon>edit</mat-icon>
+      <span>Edit</span>
+      <mat-icon class="dropdown-arrow">arrow_drop_down</mat-icon>
+    </button>
+
+    <mat-menu #editMenu="matMenu" panelClass="edit-nav-menu">
+      <button mat-menu-item (click)="openTemplateTOC(); $event.stopPropagation()">
+        <mat-icon>format_list_numbered</mat-icon>
+        <span>{{ isNewProject ? 'New Table of Contents' : 'Table of Contents' }}</span>
+      </button>
+      <button mat-menu-item (click)="openTemplateDIS(); $event.stopPropagation()">
+        <mat-icon>draw</mat-icon>
+        <span>{{ isNewProject ? 'New Drawing Information' : 'Drawing Information' }}</span>
+      </button>
+    </mat-menu>
+
+    <!-- Admin button moved to user dropdown in header -->
+    <!--<button *ngIf="isAdmin" class="nav-item" (click)="showAdmin()" matTooltip="Admin panel">
+      <mat-icon>admin_panel_settings</mat-icon>
+      <span>Admin</span>
+    </button>-->
+
+    <!--<button class="nav-item" (click)="debugListNetworkPath()" matTooltip="Debug: List network path contents" style="opacity: 0.6;">
+      <mat-icon>bug_report</mat-icon>
+      <span>Debug</span>
+    </button>-->
+
+  </div>
+  <h3 *ngIf="projectOpened" class="project-title-right">{{ project.projectNum }}</h3>
+</div>
+
+<!-- Loading Indicator with Blur Overlay -->
+<div *ngIf="isLoadingProject || isCreatingProject || isDownloading" class="loading-overlay" [ngClass]="{ 'blur-active': isLoadingProject || isCreatingProject || isDownloading }">
+  <div class="loading-content">
+    <mat-progress-spinner mode="indeterminate" [diameter]="isDownloading ? 80 : 60"></mat-progress-spinner>
+    <p class="loading-text">
+      <ng-container *ngIf="isDownloading">
+        <mat-icon class="download-icon">cloud_download</mat-icon>
+        Downloading... Please wait
+      </ng-container>
+      <ng-container *ngIf="isCreatingProject && !isDownloading">
+        Creating project and copying files...
+      </ng-container>
+      <ng-container *ngIf="isLoadingProject && !isCreatingProject && !isDownloading">
+        Loading project details...
+      </ng-container>
+    </p>
+  </div>
+</div>
+
+<div *ngIf="hasOpenDialog" class="dialog-dismiss-overlay" (click)="closeLandingDialogs()"></div>
+
+<div class="landing-body" (click)="closeLandingDialogs()">
+  <mat-tab-group [(selectedIndex)]="tabIndex">
+    <!-- Project Details Tab -->
+    <mat-tab label="Project Details">
+      <div class="details-row tab-content-spacing">
+        <!-- Left Column -->
+        <div class="body-left">
+          <div class="row">
+            <label class="field-label">Project Number</label>
+            <input class="field-input" [value]="project.projectNum || ''" [readonly]="true" [disabled]="true" />
+          </div>
+          <div class="row">
+            <label class="field-label">Customer</label>
+            <input class="field-input" [(ngModel)]="project.customer" [readonly]="!isEditable" [disabled]="!isEditable" />
+          </div>
+          <div class="row">
+            <label class="field-label">Work Order</label>
+            <input class="field-input" [(ngModel)]="project.workOrder" [readonly]="!isEditable" [disabled]="!isEditable" />
+          </div>
+          <div class="row">
+            <label class="field-label">Net Build ID</label>
+            <input class="field-input" [(ngModel)]="project.clarifyCaseId" [readonly]="!isEditable" [disabled]="!isEditable" />
+          </div>
+          <div class="row">
+            <label class="field-label">Address 1</label>
+            <input class="field-input" [(ngModel)]="project.addr1" [readonly]="!isEditable" [disabled]="!isEditable" />
+          </div>
+          <div class="row">
+            <label class="field-label">Address 2</label>
+            <input class="field-input" [(ngModel)]="project.addr2" [readonly]="!isEditable" [disabled]="!isEditable" />
+          </div>
+          <div class="row">
+            <label class="field-label">City</label>
+            <input class="field-input" [(ngModel)]="project.city" [readonly]="!isEditable" [disabled]="!isEditable" />
+          </div>
+          <div class="row">
+            <label class="field-label">State/Prov</label>
+            <input class="field-input" [(ngModel)]="project.stateOrProv" [readonly]="!isEditable" [disabled]="!isEditable" />
+          </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="body-right">
+          <div class="row">
+            <label class="field-label">Date of Issue</label>
+            <input class="field-input" type="date" [(ngModel)]="project.dateOfIssue" [disabled]="!isEditable" />
+          </div>
+          <div class="row">
+            <label class="field-label">Zone</label>
+            <select class="field-input" [(ngModel)]="project.earthquakeZone" (change)="onEarthquakeZoneChange()" [disabled]="!isEditable">
+              <option value="low">0.1-Light</option>
+              <option value="moderate">2-Moderate</option>
+              <option value="heavy">3.4-Heavy</option>
+            </select>
+          </div>
+          
+          <div class="row">
+            <label class="field-label">Raise Floor Height</label>
+            <input class="field-input" 
+                   [value]="project.floorHeight !== null && project.floorHeight !== undefined ? (project.floorHeight | number:'1.2-2') : ''" 
+                   (input)="onFloorHeightInput($event.target.value)" 
+                   type="text" 
+                   placeholder="0.00"
+                   (blur)="formatFloorHeight()" 
+                   [readonly]="!isEditable" 
+                   [disabled]="!isEditable" />
+          </div>
+          <div class="row">
+            <label class="field-label">Owner</label>
+            <input class="field-input" [value]="project.userName || ''" [readonly]="true" [disabled]="true" />
+          </div>
+          <div class="row">
+            <label class="field-label">Project Group</label>
+            <input class="field-input" [(ngModel)]="project.projectGroup" [readonly]="!isEditable" [disabled]="!isEditable" placeholder="Facilities" />
+          </div>
+          <div class="row">
+            <label class="field-label">Completed</label>
+            <mat-checkbox [(ngModel)]="project.completed" [disabled]="!isEditable"></mat-checkbox>
+          </div>
+          <div class="row">
+            <label class="field-label">Zip</label>
+            <input class="field-input" [(ngModel)]="project.zip" [readonly]="!isEditable" [disabled]="!isEditable" />
+          </div>
+          <div class="row">
+            <label class="field-label">Country</label>
+            <input class="field-input" [(ngModel)]="project.country" [readonly]="!isEditable" [disabled]="!isEditable" />
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Project Contact Tab -->
+    <mat-tab label="Project Contacts">
+      <div class="contact-tab-table tab-content-spacing">
+        <div style="overflow-x: auto; width: 100%; max-width: 100%;">
+          <table class="footer-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Address 1</th>
+                <th>Address 2</th>
+                <th>City</th>
+                <th>State/Province</th>
+                <th>Zip Code</th>
+                <th>Country</th>
+                <th>Phone</th>
+                <th>Fax</th>
+                <th>Email Address</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let contact of project.contacts">
+                <td>{{ contact.title }}</td>
+                <td>{{ contact.firstName }}</td>
+                <td>{{ contact.lastName }}</td>
+                <td>{{ contact.addr1 }}</td>
+                <td>{{ contact.addr2 }}</td>
+                <td>{{ contact.city }}</td>
+                <td>{{ contact.state }}</td>
+                <td>{{ contact.zip }}</td>
+                <td>{{ contact.country }}</td>
+                <td>{{ contact.phone }}</td>
+                <td>{{ contact.fax }}</td>
+                <td>{{ contact.email }}</td>
+              </tr>
+              <tr *ngIf="!project.contacts || project.contacts.length === 0">
+                <td colspan="12" style="text-align: center; color: #999; padding: 16px;">No contacts available</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
